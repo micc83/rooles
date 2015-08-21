@@ -32,34 +32,7 @@ class RoleServiceProvider extends ServiceProvider
      */
     public function registerRoles(RoleRepo $roleRepo)
     {
-
-        // Amministratore
-        $roleRepo->create('amministratore')->grant('*');
-
-        // Amministratore
-        $roleRepo->create('operatore')->grant([
-            'users.*'
-        ]);
-
-        // Agente
-        $roleRepo->create('agente')->grant([
-            'profile.*',
-            'customers.own.read',
-        ]);
-
-        // Cliente
-        $roleRepo->create('customer')->grant([
-            'profile.*'
-        ]);
-
-        // Capo area
-        $roleRepo->create('capoarea')->grant([
-            'profile.*'
-        ]);
-
-
         return $roleRepo;
-
     }
 
 }

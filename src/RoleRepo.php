@@ -41,7 +41,7 @@ class RoleRepo
      */
     public function add (Role $role)
     {
-        if (array_search($role, $this->roles) !== false) {
+        if (isset($this->roles[(string)$role])) {
             throw new UnexpectedValueException('Duplicated role!');
         }
         $this->roles[(string)$role] = $role;

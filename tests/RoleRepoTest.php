@@ -1,5 +1,6 @@
 <?php
 
+use Rooles\Role;
 use Rooles\RoleRepo;
 
 /**
@@ -60,14 +61,13 @@ class RoleRepoTest extends BaseCase
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage Duplicated role!
      */
-    public function it_throws_exception_if_role_already_exists ()
+    public function it_throws_exception_if_role_with_same_name_already_exists ()
     {
 
         $roleRepo = new RoleRepo();
 
-        $role = $roleRepo->create('test');
-
-        $roleRepo->add($role);
+        $roleRepo->add((new Role('test'))->grant('*'));
+        $roleRepo->add(new Role('test'));
 
     }
 
