@@ -48,7 +48,31 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function cannot_inverts_the_result_of_can () {
+    public function it_allows_to_deny_role_permissions (){
+
+        $areaManager = new Role('area manager');
+
+        $areaManager->grant([
+            'users',
+        ]);
+
+        $areaManager->deny([
+            'users.*.write',
+            'users.write'
+        ]);
+
+        $this->assertTrue($areaManager->can('users.read'));
+        $this->assertTrue($areaManager->can('users.customers.all.write.poems'));
+
+        $this->assertFalse($areaManager->can('users.write'));
+        $this->assertFalse($areaManager->can('users.admin.write'));
+
+    }
+
+    /**
+     * @test
+     */
+    public function provide_a_cannot_method_which_inverts_the_result_of_can () {
 
         $role = new Role('role');
 

@@ -13,7 +13,7 @@ class RoleRepoTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_to_create_and_store_roles()
+    public function it_allows_to_create_and_store_roles ()
     {
 
         $roleRepo = new RoleRepo();
@@ -31,12 +31,43 @@ class RoleRepoTest extends BaseCase
 
     /**
      * @test
+     */
+    public function it_allows_to_get_existing_role_or_create_a_new_one ()
+    {
+
+        $roleRepo = new RoleRepo();
+
+        $roleRepo->getOrCreate('admin')->grant('*');
+
+        $this->assertTrue($roleRepo->getOrCreate('admin')->can('*'));
+
+    }
+
+    /**
+     * @test
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Role not found
      */
-    public function it_throws_exception_if_role_doesnt_exists () {
+    public function it_throws_exception_if_role_doesnt_exists ()
+    {
 
         (new RoleRepo())->get('detractor');
+
+    }
+
+    /**
+     * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage Duplicated role!
+     */
+    public function it_throws_exception_if_role_already_exists ()
+    {
+
+        $roleRepo = new RoleRepo();
+
+        $role = $roleRepo->create('test');
+
+        $roleRepo->add($role);
 
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+use UserMock as User;
+
 /**
  * Class UserRoleTest
  */
@@ -10,7 +12,7 @@ class UserRoleTest extends BaseCase {
      */
     public function it_adds_roles_capability_to_eloquent_models () {
 
-        $user = new UserMock([
+        $user = new User([
             'name' => 'Joshua',
             'role' => 'customer'
         ]);
