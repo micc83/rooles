@@ -1,0 +1,24 @@
+{
+    "name": "micc83/roole",
+    "description": "A very simple package to handle Roles and Permissions in Laravel 5",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alessandro Benoit",
+            "email": "micc83@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4" : {
+            "Roole\\" : "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap" : ["tests/"]
+    },
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^4.8",
+        "laravel/laravel": "^5.1"
+    }
+}
