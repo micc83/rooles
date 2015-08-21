@@ -8,7 +8,7 @@
 class UserMock extends App\User
 {
 
-    use Roole\Traits\UserRole;
+    use Rooles\Traits\UserRole;
 
     /**
      * Mass assignment

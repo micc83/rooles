@@ -1,6 +1,6 @@
 <?php
 
-use Roole\Role;
+use Rooles\Role;
 
 /**
  * Class RoleTest

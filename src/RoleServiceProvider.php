@@ -1,6 +1,6 @@
 <?php
 
-namespace Roole;
+namespace Rooles;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -18,7 +18,7 @@ class RoleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('Roole\RoleRepo', function () {
+        $this->app->singleton('Rooles\RoleRepo', function () {
             return $this->registerRoles(new RoleRepo);
         });
     }

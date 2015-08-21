@@ -1,5 +1,5 @@
 {
-    "name": "micc83/roole",
+    "name": "micc83/rooles",
     "description": "A very simple package to handle Roles and Permissions in Laravel 5",
     "license": "MIT",
     "authors": [
@@ -10,7 +10,7 @@
     ],
     "autoload": {
         "psr-4" : {
-            "Roole\\" : "src/"
+            "Rooles\\" : "src/"
         }
     },
     "autoload-dev": {

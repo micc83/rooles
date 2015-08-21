@@ -1,6 +1,6 @@
 <?php
 
-use Roole\RoleRepo;
+use Rooles\RoleRepo;
 
 /**
  * Class RoleRepoTest

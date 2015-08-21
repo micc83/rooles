@@ -1,8 +1,8 @@
 <?php
 
-namespace Roole\Traits;
+namespace Rooles\Traits;
 
-use Roole\RoleRepo;
+use Rooles\RoleRepo;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -17,13 +17,13 @@ trait UserRole
      *
      * @param string $role
      *
-     * @return \Roole\Role
+     * @return \Rooles\Role
      */
     public function getRoleAttribute($role)
     {
 
         /** @var RoleRepo $roleRepo */
-        $roleRepo = App::make('Roole\RoleRepo');
+        $roleRepo = App::make('Rooles\RoleRepo');
 
         return $roleRepo->get($role);
 

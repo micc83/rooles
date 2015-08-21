@@ -1,6 +1,6 @@
 <?php
 
-namespace Roole;
+namespace Rooles;
 
 use InvalidArgumentException;
 use UnexpectedValueException;
