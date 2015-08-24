@@ -92,7 +92,7 @@ All the permissions for any given role are set in the `config/rooles.php` file a
 ];
 ```
     
-The wildcard "*" is used to define a set of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array.
+The wildcard "\*" is used to define a set of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array.
 
 The default role is applied to any user which has no role applied and provides no permissions unless differently stated.
 
