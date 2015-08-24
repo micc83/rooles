@@ -5,10 +5,11 @@
 Well, good point! Lately even *Taylor Otwell* is working on a custom ACL system to be shipped with (I guess as a separated package) **Laravel 5.2** so what's the point on creating a new one?
 Well it's all about complexity. Most of the ACL systems out here such as [romanbican/roles](https://github.com/romanbican/roles), [kodeine/laravel-acl](https://github.com/kodeine/laravel-acl) or [Sentinel](https://cartalyst.com/manual/sentinel/) are packed with tons of amazing features... which most of the time I'm not using! :D
 
-That's why I thought to build a minimal Laravel Package that provides a very simple RBAC implementation. Each user can be assigned a single Role and permissions for each Role are stored in a single config file. 
+That's why I thought to build a minimal Laravel Package that provides a very simple RBAC implementation on top of the **default Laravel Auth System**. 
+Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permission directly on the Eloquent User Model and two Middleware to easily protect routes and Controllers.
 
-However as your application grown you might need a more complex ACL system, that's why I'm providing a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
-com
+However as your application grown you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
+
 ### Setup
 
 Run the following from your terminal from withinn the path containing the Laravel `composer.json` file:
@@ -164,7 +165,9 @@ if ( $user->role->isIn(['lamer', 'trool']) ) echo 'Hello Looser';
     
 ### Protect routes and Controllers through Rooles Middlewares
 
-You can protect both routes and Controllers through Rooles Middlewares. To protect routes by User Role you can use the **role Middleware**:
+**Rooles**  provides two Middlewares to protect both routes and Controllers.
+
+To protect routes by User Role you can use the **role Middleware**:
 
 ```php
 Route::get('admin/users/', [
@@ -191,6 +194,8 @@ Route::get('admin/users/', [
     }
 ]);
 ```
+
+In both case you'll have probably noticed that I'm calling the **Auth middleware** as the user must be logged in in order to check its Role and permissions.
 
 Most of the times you'll be probably being dealing with routes groups, in that case you can simply:
 
