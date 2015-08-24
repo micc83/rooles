@@ -140,7 +140,7 @@ The API exposes a convenient method to negate a permissions assertion:
 if ( $user->cannot('users.list') ) redirect()->to('dashboard');
 ```
     
-You can evaluate multiple assertions using passing an array through:
+You can evaluate multiple assertions passing an array through:
 
 ```php
 if ( $user->can(['users.list', 'users.read']) ) // Do something when the user has both the permissions (AND)
