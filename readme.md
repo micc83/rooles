@@ -265,7 +265,7 @@ Here we are saying that in order to access any controller method we must have a 
 }
 ```
 
-So that you can intercepept it in JavaScript as follow:
+So that you can intercept it in JavaScript as follow:
 
 ```js
 if ('error' in response) console.log(response.error.message);
