@@ -5,10 +5,10 @@
 Well, good point! Lately even *Taylor Otwell* is working on a custom ACL system to be shipped with (I guess as a separated package) **Laravel 5.2** so what's the point on creating a new one?
 Well it's all about complexity. Most of the ACL systems out here such as [romanbican/roles](https://github.com/romanbican/roles), [kodeine/laravel-acl](https://github.com/kodeine/laravel-acl) or [Sentinel](https://cartalyst.com/manual/sentinel/) are packed with tons of amazing features... which most of the time I'm not using! :D
 
-That's why I thought to build a minimal Laravel Package that provides a very simple RBAC implementation on top of the **default Laravel Auth System**. 
-Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permissions directly on the Eloquent User Model and two Middleware to easily protect routes and Controllers.
+That's why I thought to build a minimal **Laravel roles and permissions manager** that provides a very simple RBAC implementation on top of the **default Laravel Auth System**. 
+Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permissions directly on the Eloquent User Model and two Middlewares to easily protect routes and Controllers.
 
-However, as your application grown, you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
+However, as your application grown, you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace functionalities at need. You can see **Rooles** not only as a fully working RBAC but also as a *starting point to develop your own custom roles and permission manager*.
 
 ### Setup
 
@@ -24,7 +24,7 @@ Open `config/app.php` and add the following line at the end of the providers arr
 Rooles\RoolesServiceProvider::class
 ```
     
-Run the following command from your terminal to publish the migration and the config files:
+Run the following command from your terminal to publish the migration (it will simply add a `role` column to the default Users table) and the config files:
 
 ```sh
 $ php artisan vendor:publish
@@ -61,7 +61,13 @@ protected $attributes = [
 ];
 ```
     
-Or run the provided migration to add a role column to the Users Table.
+Or run the provided migration to add the `role` column to the Users Table so to be able to change Users role at runtime:
+
+```php
+$user = User::find(1);
+$user->role = 'admin';
+$user->save();
+```
 
 ### Setting up permissions
 
@@ -92,9 +98,9 @@ All the permissions for any given role are set in the `config/rooles.php` file a
 ];
 ```
     
-The wildcard "\*" is used to define a set of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array.
+The wildcard character "\*" is used to define a set of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array.
 
-The default role is applied to any user which has no role applied and provides no permissions unless differently stated.
+The `default` role is applied to any user which has no role applied and provides no permissions unless differently stated in the config file.
 
 You can also create roles and handle permissions manually. Here's an example:
 
@@ -162,7 +168,16 @@ Or check if the user role is in a given range:
 ```php
 if ( $user->role->isIn(['lamer', 'trool']) ) echo 'Hello Looser';
 ``` 
-    
+
+You can also get the User role name using one of the following syntax:
+
+```php
+// If in a string context:
+echo $user->role;
+// Otherwise:
+if ($user->role->name() === 'admin') // Do something
+```
+
 ### Protect routes and Controllers through Middlewares
 
 **Rooles** provides two Middlewares to protect both routes and Controllers.
@@ -233,5 +248,40 @@ class UserController extends Controller
     }
 ```
 
-Here we are saying that in order to access any controller method we must have a role that provides the `users.*` permission but we don't need any permission to view user profiles.
-You can find a better documentation on Controller Middlewares on the official [Laravel website](http://laravel.com/docs/5.0/controllers#controller-middleware).
+Here we are saying that in order to access any controller method we must have a role that provides the `users.*` permission but we don't need any permission to view user profiles. You can find a better documentation on Controller Middlewares on the official [Laravel website](http://laravel.com/docs/5.0/controllers#controller-middleware).
+
+#### Handling middlewares HTTP error responses
+
+**Rooles** middlewares handles error responses differently depending on the nature of the request. For Ajax requests they will respond with a JSON Object and a `401` status code as follow:
+
+```json
+{
+    "error" : {
+        "code" : 401,
+        "message" : "Unauthorized"
+    }
+}
+```
+
+So that you can intercepept it in JavaScript as follow:
+
+```js
+if ('error' in response) console.log(response.error.message);
+```
+
+For normal requests in case of error a `Rooles\UnauthorizedHttpException` is thrown, which by default will result in the default error page with a `401` status code but it can be customized from the render method in `app/Exceptions/Handler.php` as follow:
+
+```php
+public function render($request, Exception $e)
+{
+    //...
+    if ($e instanceof \Rooles\UnauthorizedHttpException) {
+        redirect()->back()->with('message', 'You don\'t have the needed permissions to perform this action!');
+    }
+    return parent::render($request, $e);
+}
+```
+
+### Contributions
+
+I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add furthers when needed). 
