@@ -9,7 +9,7 @@ Well it's all about complexity. Most of the ACL systems out here such as [romanb
 That's why I thought to build a minimal Laravel Package that provides a very simple RBAC implementation. Each user can be assigned a single Role and permissions for each Role are stored in a single config file. 
 
 However as your application grown you might need a more complex ACL system, that's why I'm providing a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
-
+com
 ### Setup
 
 Run the following from your terminal from withinn the path containing the Laravel `composer.json` file:
@@ -30,7 +30,7 @@ In order to publish the migration and config files run the following command fro
 $ php artisan vendor:publish
 ```
 
-In order to be able to use route and controllers middlewares (so to be able to filter who's able to access a given route or controller method) open `App/Http/Kernel.php` and add the following lines at the end of the `$routeMiddleware` array:
+In order to be able to use route and Controllers middlewares (so to be able to filter who's able to access a given route or Controller method) open `App/Http/Kernel.php` and add the following lines at the end of the `$routeMiddleware` array:
 
 ```php
 'perms' => \Rooles\PermsMiddleware::class,
@@ -107,7 +107,7 @@ app()->make(\Rooles\Contracts\RoleRepository::class)
 
 ### Check user permissions
 
-From within your controller methods or wherever you feel comfortable you can check for a given user permissions as follow:
+From within your Controller methods or wherever you feel comfortable you can check for a given user permissions as follow:
 
 ```php
 $user = User::find(1);
@@ -163,7 +163,7 @@ Or check if the user role is in a given range:
 if ( $user->role->isIn(['lamer', 'trool']) ) echo 'Hello Looser';
 ``` 
     
-### Protect routes and controllers through Rooles Middlewares
+### Protect routes and Controllers through Rooles Middlewares
 
 You can protect both routes and Controllers through Rooles Middlewares. To protect routes by User Role you can use the **role Middleware**:
 
