@@ -1,7 +1,7 @@
 <?php
 
 use Rooles\Role;
-use Rooles\RoleRepo;
+use Rooles\RoleManager;
 
 /**
  * Class RoleRepoTest
@@ -12,7 +12,7 @@ class RoleRepoTest extends BaseCase
 {
 
     /**
-     * @var RoleRepo
+     * @var RoleManager
      */
     var $roleRepo;
 
@@ -22,7 +22,7 @@ class RoleRepoTest extends BaseCase
     public function setUp()
     {
         parent::setUp();
-        $this->roleRepo = new RoleRepo();
+        $this->roleRepo = new RoleManager();
     }
 
     /**

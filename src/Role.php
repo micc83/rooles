@@ -6,9 +6,9 @@ use InvalidArgumentException;
 
 /**
  * Class Role
- * @package App\Crm\Permission
+ * @package Rooles
  */
-class Role
+class Role implements Contracts\Role
 {
 
     /**

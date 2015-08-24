@@ -4,13 +4,14 @@ namespace Rooles;
 
 use InvalidArgumentException;
 use Rooles\Contracts\RoleRepository;
+use Rooles\Contracts\Role as RoleContract;
 use UnexpectedValueException;
 
 /**
- * Class RoleRepo
- * @package App\Crm\Permission
+ * Class RoleManager
+ * @package Rooles
  */
-class RoleRepo implements RoleRepository
+class RoleManager implements RoleRepository
 {
 
     /**
@@ -25,7 +26,7 @@ class RoleRepo implements RoleRepository
      *
      * @param string $roleName
      *
-     * @return Role
+     * @return RoleContract
      */
     public function getOrCreate($roleName)
     {
@@ -44,7 +45,7 @@ class RoleRepo implements RoleRepository
      *
      * @param string $roleName
      *
-     * @return Role
+     * @return RoleContract
      */
     public function get($roleName)
     {
@@ -66,7 +67,7 @@ class RoleRepo implements RoleRepository
      *
      * @param string $roleName
      *
-     * @return Role
+     * @return RoleContract
      */
     public function create($roleName)
     {
@@ -79,9 +80,9 @@ class RoleRepo implements RoleRepository
     /**
      * Add an existing role object to the repository
      *
-     * @param Role $role
+     * @param RoleContract $role
      */
-    public function add(Role $role)
+    public function add(RoleContract $role)
     {
         if (isset( $this->roles[$role->name()] )) {
             throw new UnexpectedValueException('Duplicated role!');

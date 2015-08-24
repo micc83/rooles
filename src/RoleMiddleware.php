@@ -9,12 +9,12 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Class RoleMiddleware
- * @package App\Http\Middleware
+ * @package Rooles
  */
 class RoleMiddleware
 {
     /**
-     * @var RoleRepo
+     * @var RoleManager
      */
     protected $roleRepo;
 

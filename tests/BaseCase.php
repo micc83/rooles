@@ -29,7 +29,7 @@ abstract class BaseCase extends TestCase
         $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
         // Register Roole Service Provider
-        $app->register(Rooles\RoleServiceProvider::class);
+        $app->register(Rooles\RoolesServiceProvider::class);
 
         $router = $app['router'];
 

@@ -1,0 +1,67 @@
+<?php
+
+namespace Rooles;
+
+use Illuminate\Support\ServiceProvider;
+use Rooles\Contracts\RoleRepository;
+
+/**
+ * Class RoolesServiceProvider
+ * @package Rooles
+ */
+class RoolesServiceProvider extends ServiceProvider
+{
+
+    /**
+     * Boot the service provider
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->publishes([
+            __DIR__ . '/assets/config.php' => config_path('rooles.php'),
+        ]);
+
+        $this->mergeConfigFrom(
+            __DIR__ . '/assets/config.php', 'rooles'
+        );
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        $this->app->singleton(RoleRepository::class, function () {
+            return $this->registerRoles(new RoleManager);
+        });
+    }
+
+    /**
+     * Permissions
+     *
+     * @param RoleRepository $roleRepo
+     *
+     * @return RoleManager
+     */
+    public function registerRoles(RoleRepository $roleRepo)
+    {
+        $roles = config('rooles.roles');
+
+        foreach ($roles as $roleName => $permissions) {
+            $role = $roleRepo->getOrCreate($roleName);
+            if (array_key_exists('grant', $permissions)) {
+                $role->grant($permissions['grant']);
+            }
+            if (array_key_exists('deny', $permissions)) {
+                $role->deny($permissions['deny']);
+            }
+        }
+
+        return $roleRepo;
+    }
+
+}

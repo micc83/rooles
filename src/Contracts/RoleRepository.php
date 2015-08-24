@@ -2,8 +2,6 @@
 
 namespace Rooles\Contracts;
 
-use Rooles\Role;
-
 /**
  * Interface RoleRepository
  * @package Rooles\Contracts
