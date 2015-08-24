@@ -1,5 +1,4 @@
 # Rooles
-## Very simple package to handle Roles and Permissions in Laravel 5
 
 ### Why another Laravel RBAC (Role based access control) ?!?
 
