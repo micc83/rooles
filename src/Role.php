@@ -77,9 +77,9 @@ class Role implements Contracts\Role
     protected function array_set(&$array, $key, $value)
     {
 
-        $key = $key . '.*';
+        $keys = explode('.', $this->removeEndingWildcard($key));
 
-        $keys = explode('.', $key);
+        $keys[] = '*';
 
         while (count($keys) > 1) {
             $key = array_shift($keys);
@@ -96,6 +96,18 @@ class Role implements Contracts\Role
         $array[array_shift($keys)] = $value;
 
         return $array;
+    }
+
+    /**
+     * Remove the wildcard at the end of the string
+     *
+     * @param $key
+     *
+     * @return string
+     */
+    protected function removeEndingWildcard($key)
+    {
+        return preg_replace('/\.\*$/', '', $key);
     }
 
     /**

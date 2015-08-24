@@ -112,6 +112,13 @@ class RoleTest extends BaseCase
 
         $testRole = new Role('test');
 
+        $testRole->grant('users.*'); // Same as users
+
+        $this->assertTrue($testRole->can('users'));
+        $this->assertTrue($testRole->can('users.*'));
+
+        $testRole = new Role('test');
+
         $testRole->grant('*.read');
 
         $this->assertTrue($testRole->can('users.read'));
