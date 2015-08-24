@@ -6,7 +6,7 @@ Well, good point! Lately even *Taylor Otwell* is working on a custom ACL system 
 Well it's all about complexity. Most of the ACL systems out here such as [romanbican/roles](https://github.com/romanbican/roles), [kodeine/laravel-acl](https://github.com/kodeine/laravel-acl) or [Sentinel](https://cartalyst.com/manual/sentinel/) are packed with tons of amazing features... which most of the time I'm not using! :D
 
 That's why I thought to build a minimal Laravel Package that provides a very simple RBAC implementation on top of the **default Laravel Auth System**. 
-Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permission directly on the Eloquent User Model and two Middleware to easily protect routes and Controllers.
+Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permissions directly on the Eloquent User Model and two Middleware to easily protect routes and Controllers.
 
 However, as your application grown, you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
 
@@ -51,7 +51,7 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 }
 ```
 
-### Setting users role
+### Setting up users role
 
 Only a single Role can be assigned to each User. You can hardcode the role inside the User Eloquent model adding the role attribute as follow:
 
@@ -63,7 +63,7 @@ protected $attributes = [
     
 Or run the provided migration to add a role column to the Users Table.
 
-### Setting permissions
+### Setting up permissions
 
 All the permissions for any given role are set in the `config/rooles.php` file as follow:
 
@@ -105,7 +105,7 @@ app()->make(\Rooles\Contracts\RoleRepository::class)
      ->deny('cart.discount');
 ```
 
-### Check user permissions
+### Checking for User permissions
 
 From within your Controller methods or wherever you feel comfortable you can check for a given user permissions as follow:
 
@@ -149,7 +149,7 @@ if ( $user->can('users.list|users.read') ) // Do something when the user has one
     
 Multiple operators can ben be joined together but mind that AND operators have always priority over OR operators.
 
-### Check user role
+### Checking for User role
 
 You can make a more general assertion checking for the user role:
 
@@ -163,9 +163,9 @@ Or check if the user role is in a given range:
 if ( $user->role->isIn(['lamer', 'trool']) ) echo 'Hello Looser';
 ``` 
     
-### Protect routes and Controllers through Rooles Middlewares
+### Protect routes and Controllers through Middlewares
 
-**Rooles**  provides two Middlewares to protect both routes and Controllers.
+**Rooles** provides two Middlewares to protect both routes and Controllers.
 
 To protect routes by User Role you can use the **role Middleware**:
 
