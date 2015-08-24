@@ -20,6 +20,8 @@ class RoleRepo
     protected $roles = [];
 
     /**
+     * Get an existing role or create a new one with the given name
+     *
      * @param string $roleName
      *
      * @return Role
@@ -34,12 +36,21 @@ class RoleRepo
     }
 
     /**
+     * Get the role with the given name
+     *
+     * Return a "default" role if the given name is empty or
+     * throw InvalidArgumentException if role name is not found
+     *
      * @param string $roleName
      *
      * @return Role
      */
     public function get($roleName)
     {
+
+        if (empty( $roleName )) {
+            return $this->getOrCreate('default');
+        }
 
         if (isset( $this->roles[$roleName] )) {
             return $this->roles[$roleName];
@@ -65,7 +76,7 @@ class RoleRepo
     }
 
     /**
-     * Add an existing role
+     * Add an existing role object to the repository
      *
      * @param Role $role
      */

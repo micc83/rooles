@@ -12,18 +12,29 @@ class RoleRepoTest extends BaseCase
 {
 
     /**
+     * @var RoleRepo
+     */
+    var $roleRepo;
+
+    /**
+     * Setup
+     */
+    public function setUp()
+    {
+        $this->roleRepo = new RoleRepo();
+    }
+
+    /**
      * @test
      */
-    public function it_allows_to_create_and_store_roles ()
+    public function it_allows_to_create_and_store_roles()
     {
 
-        $roleRepo = new RoleRepo();
-
-        $roleRepo->create('sales agent')->grant([
+        $this->roleRepo->create('sales agent')->grant([
             'users.own.read'
         ]);
 
-        $salesAgent = $roleRepo->get('sales agent');
+        $salesAgent = $this->roleRepo->get('sales agent');
 
         $this->assertTrue($salesAgent->can('users.own.read'));
         $this->assertFalse($salesAgent->can('users.read'));
@@ -33,14 +44,12 @@ class RoleRepoTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_to_get_existing_role_or_create_a_new_one ()
+    public function it_allows_to_get_existing_role_or_create_a_new_one()
     {
 
-        $roleRepo = new RoleRepo();
+        $this->roleRepo->getOrCreate('admin')->grant('*');
 
-        $roleRepo->getOrCreate('admin')->grant('*');
-
-        $this->assertTrue($roleRepo->getOrCreate('admin')->can('*'));
+        $this->assertTrue($this->roleRepo->getOrCreate('admin')->can('*'));
 
     }
 
@@ -49,11 +58,9 @@ class RoleRepoTest extends BaseCase
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Role not found
      */
-    public function it_throws_exception_if_role_doesnt_exists ()
+    public function it_throws_exception_if_role_doesnt_exists()
     {
-
-        (new RoleRepo())->get('detractor');
-
+        $this->roleRepo->get('detractor');
     }
 
     /**
@@ -61,14 +68,18 @@ class RoleRepoTest extends BaseCase
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage Duplicated role!
      */
-    public function it_throws_exception_if_role_with_same_name_already_exists ()
+    public function it_throws_exception_if_role_with_same_name_already_exists()
     {
+        $this->roleRepo->add((new Role('test'))->grant('*'));
+        $this->roleRepo->add(new Role('test'));
+    }
 
-        $roleRepo = new RoleRepo();
-
-        $roleRepo->add((new Role('test'))->grant('*'));
-        $roleRepo->add(new Role('test'));
-
+    /**
+     * @test
+     */
+    public function if_empty_rolename_is_requested_return_a_default_empty_role()
+    {
+        $this->assertEquals('default', $this->roleRepo->get('')->name());
     }
 
 }

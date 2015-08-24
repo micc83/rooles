@@ -19,6 +19,8 @@ class RoleTest extends BaseCase
         $customer = new Role('customer');
 
         $this->assertTrue($customer->is('customer'));
+        $this->assertTrue($customer->isIn(['customer', 'users']));
+        $this->assertEquals('customer', $customer->name());
         $this->assertFalse($customer->is('admin'));
 
     }
