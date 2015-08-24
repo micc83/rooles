@@ -98,7 +98,9 @@ All the permissions for any given role are set in the `config/rooles.php` file a
 ];
 ```
     
-The wildcard character "\*" is used to define a set of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array.
+The **wildcard character "\*"** is used to define a whole subset of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array. 
+
+> The wildcard character at the end of a permission string can be omitted as `users` and `users.*` are the same.
 
 The `default` role is applied to any user which has no role applied and provides no permissions unless differently stated in the config file.
 
@@ -244,11 +246,11 @@ class UserController extends Controller
     public function __construct(UserRepository $users)
     {
         $this->users = $users;
-        $this->middleware('perms:users.*', ['except' => 'read']);
+        $this->middleware('perms:users', ['except' => 'show']);
     }
 ```
 
-Here we are saying that in order to access any controller method we must have a role that provides the `users.*` permission but we don't need any permission to view user profiles. You can find a better documentation on Controller Middlewares on the official [Laravel website](http://laravel.com/docs/5.0/controllers#controller-middleware).
+Here we are saying that in order to access any controller method we must have a role that provides all the `users` permissions but we don't need any permission to show user profiles. You can find a better documentation on Controller Middlewares on the official [Laravel website](http://laravel.com/docs/5.0/controllers#controller-middleware).
 
 #### Handling middlewares HTTP error responses
 
