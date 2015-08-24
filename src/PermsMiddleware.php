@@ -49,7 +49,7 @@ class PermsMiddleware
         /** @var User $user */
         $user = $this->auth->user();
 
-        if ( ! $user || $user->role->cannot($perms)) {
+        if ( ! $user || $user->getAttribute('role')->cannot($perms)) {
             if ($request->ajax()) {
                 return response()->json([
                     'error' => [

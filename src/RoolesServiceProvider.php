@@ -19,14 +19,12 @@ class RoolesServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        dump(date('Y_m_d_H_i_s'));
-
         $this->publishes([
             __DIR__ . '/assets/config.php' => config_path('rooles.php'),
         ]);
 
         $this->publishes([
-            __DIR__.'/assets/migration.php' => database_path('migrations/' . date('Y_m_d_His_') . 'add_role_to_user_table' )
+            __DIR__ . '/assets/migration.php' => database_path('migrations/' . date('Y_m_d_His_') . 'add_role_column_to_user_table.php')
         ]);
 
         $this->mergeConfigFrom(
