@@ -21,6 +21,7 @@ class RoleRepoTest extends BaseCase
      */
     public function setUp()
     {
+        parent::setUp();
         $this->roleRepo = new RoleRepo();
     }
 

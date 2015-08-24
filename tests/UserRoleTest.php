@@ -17,7 +17,7 @@ class UserRoleTest extends BaseCase {
             'role' => 'customer'
         ]);
 
-        App::make('Rooles\RoleRepo')->create('customer')->grant([
+        App::make(Rooles\Contracts\RoleRepository::class)->create('customer')->grant([
             'products.read',
             'products.write'
         ]);

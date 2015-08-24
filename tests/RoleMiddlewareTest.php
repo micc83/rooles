@@ -21,7 +21,7 @@ class RoleMiddlewareTest extends BaseCase
             }
         ]);
 
-        $roleRepo = $this->app->make('Rooles\RoleRepo');
+        $roleRepo = $this->app->make(Rooles\Contracts\RoleRepository::class);
 
         $roleRepo->create('admin');
         $roleRepo->create('root');

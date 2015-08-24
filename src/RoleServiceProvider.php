@@ -3,6 +3,7 @@
 namespace Rooles;
 
 use Illuminate\Support\ServiceProvider;
+use Rooles\Contracts\RoleRepository;
 
 /**
  * Class RoleServiceProvider
@@ -18,7 +19,7 @@ class RoleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton('Rooles\RoleRepo', function () {
+        $this->app->singleton(RoleRepository::class, function () {
             return $this->registerRoles(new RoleRepo);
         });
     }
@@ -26,11 +27,11 @@ class RoleServiceProvider extends ServiceProvider
     /**
      * Permissions
      *
-     * @param RoleRepo $roleRepo
+     * @param RoleRepository $roleRepo
      *
      * @return RoleRepo
      */
-    public function registerRoles(RoleRepo $roleRepo)
+    public function registerRoles(RoleRepository $roleRepo)
     {
         return $roleRepo;
     }

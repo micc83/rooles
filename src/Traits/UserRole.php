@@ -2,8 +2,8 @@
 
 namespace Rooles\Traits;
 
-use Rooles\RoleRepo;
 use Illuminate\Support\Facades\App;
+use Rooles\Contracts\RoleRepository;
 
 /**
  * Class Role
@@ -21,12 +21,7 @@ trait UserRole
      */
     public function getRoleAttribute($role)
     {
-
-        /** @var RoleRepo $roleRepo */
-        $roleRepo = App::make('Rooles\RoleRepo');
-
-        return $roleRepo->get($role);
-
+        return App::make(RoleRepository::class)->get($role);
     }
 
     /**

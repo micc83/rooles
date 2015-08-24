@@ -3,13 +3,14 @@
 namespace Rooles;
 
 use InvalidArgumentException;
+use Rooles\Contracts\RoleRepository;
 use UnexpectedValueException;
 
 /**
  * Class RoleRepo
  * @package App\Crm\Permission
  */
-class RoleRepo
+class RoleRepo implements RoleRepository
 {
 
     /**
