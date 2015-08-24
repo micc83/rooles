@@ -8,11 +8,11 @@ Well it's all about complexity. Most of the ACL systems out here such as [romanb
 That's why I thought to build a minimal Laravel Package that provides a very simple RBAC implementation on top of the **default Laravel Auth System**. 
 Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permission directly on the Eloquent User Model and two Middleware to easily protect routes and Controllers.
 
-However as your application grown you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
+However, as your application grown, you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace **Rooles** at need.
 
 ### Setup
 
-Run the following from your terminal from withinn the path containing the Laravel `composer.json` file:
+Run the following from your terminal from within the path containing the Laravel `composer.json` file:
 
 ```sh
 $ composer require micc83/rooles
@@ -24,7 +24,7 @@ Open `config/app.php` and add the following line at the end of the providers arr
 Rooles\RoolesServiceProvider::class
 ```
     
-In order to publish the migration and config files run the following command from your terminal:
+Run the following command from your terminal to publish the migration and the config files:
 
 ```sh
 $ php artisan vendor:publish
