@@ -13,7 +13,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_to_check_role_name () {
+    public function it_allows_to_check_role_name()
+    {
 
         $customer = new Role('customer');
 
@@ -25,7 +26,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_to_grant_role_permissions (){
+    public function it_allows_to_grant_role_permissions()
+    {
 
         $areaManager = new Role('area manager');
 
@@ -48,7 +50,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_to_deny_role_permissions (){
+    public function it_allows_to_deny_role_permissions()
+    {
 
         $areaManager = new Role('area manager');
 
@@ -72,7 +75,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function provide_a_cannot_method_which_inverts_the_result_of_can () {
+    public function provide_a_cannot_method_which_inverts_the_result_of_can()
+    {
 
         $role = new Role('role');
 
@@ -86,7 +90,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_for_full_wildcard_permissions (){
+    public function it_allows_for_full_wildcard_permissions()
+    {
 
         $admin = new Role('admin');
 
@@ -100,7 +105,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_for_partials_wildcard_permissions (){
+    public function it_allows_for_partials_wildcard_permissions()
+    {
 
         $testRole = new Role('test');
 
@@ -120,7 +126,8 @@ class RoleTest extends BaseCase
     /**
      * @test
      */
-    public function it_allows_for_middle_wildcard_permissions (){
+    public function it_allows_for_middle_wildcard_permissions()
+    {
 
         $testRole = new Role('test');
 
@@ -128,12 +135,44 @@ class RoleTest extends BaseCase
 
         $this->assertTrue($testRole->can('users.admin.read'));
         $this->assertTrue($testRole->can('users.admin.read.*'));
+        $this->assertTrue($testRole->can('users.customer.read.*'));
         $this->assertTrue($testRole->can('users.*.read.*'));
 
         $this->assertTrue($testRole->cannot('users.customers.delete'));
         $this->assertTrue($testRole->cannot('users.*.delete'));
         $this->assertTrue($testRole->cannot('users.*'));
         $this->assertTrue($testRole->cannot('users.read'));
+
+    }
+
+    /**
+     * @test
+     */
+    public function it_provide_operators_to_check_permissions()
+    {
+
+        $testRole = new Role('test');
+
+        $testRole->grant([
+            'users.read',
+            'users.delete',
+            'customers.read'
+        ]);
+
+        // OR
+        $this->assertTrue($testRole->can('users.delete|users.remove'));
+        $this->assertFalse($testRole->can('users.remove|users.create'));
+
+        // OR + AND
+        $this->assertTrue($testRole->can(['users.delete|users.remove', 'users.remove|customers.read']));
+
+        // AND
+        $this->assertTrue($testRole->can('users.read&users.delete'));
+        $this->assertFalse($testRole->can('users.delete&users.create'));
+
+        // OR + AND
+        $this->assertTrue($testRole->can('users.delete|users.remove&users.remove|customers.read'));
+        $this->assertFalse($testRole->can('users.delete|users.remove&users.remove|customers.create'));
 
     }
 

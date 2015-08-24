@@ -5,6 +5,7 @@ namespace Rooles;
 use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Class RoleMiddleware
@@ -37,7 +38,7 @@ class RoleMiddleware
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next
-     * @param                           $role
+     * @param  string                   $role
      *
      * @return mixed
      */
@@ -47,11 +48,16 @@ class RoleMiddleware
         /** @var User $user */
         $user = $this->auth->user();
 
-        if ( ! $user->role->isIn(explode('|', $role))) {
+        if ( ! $user || ! $user->role->isIn(explode('|', $role))) {
             if ($request->ajax()) {
-                return response('Unauthorized.', 401);
+                return response()->json([
+                    'error' => [
+                        'code'    => 401,
+                        'message' => 'Unauthorized'
+                    ]
+                ], 401);
             } else {
-                return redirect()->to('/')->withErrors('Non sei autorizzato a visualizzare la pagina');
+                throw new UnauthorizedHttpException('Unauthorized.');
             }
         }
 

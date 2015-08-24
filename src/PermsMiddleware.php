@@ -5,6 +5,7 @@ namespace Rooles;
 use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Class PermsMiddleware
@@ -40,6 +41,7 @@ class PermsMiddleware
      * @param string                    $perms
      *
      * @return mixed
+     * @throws UnauthorizedHttpException
      */
     public function handle($request, Closure $next, $perms = '')
     {
@@ -47,11 +49,16 @@ class PermsMiddleware
         /** @var User $user */
         $user = $this->auth->user();
 
-        if ($user->role->cannot(explode('|', $perms))) {
+        if ( ! $user || $user->role->cannot($perms)) {
             if ($request->ajax()) {
-                return response('Unauthorized.', 401);
+                return response()->json([
+                    'error' => [
+                        'code'    => 401,
+                        'message' => 'Unauthorized'
+                    ]
+                ], 401);
             } else {
-                return redirect()->back()->withErrors('Non sei autorizzato ad effettuare questa operazione!');
+                throw new UnauthorizedHttpException('Unauthorized.');
             }
         }
 
