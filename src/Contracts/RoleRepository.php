@@ -43,6 +43,8 @@ interface RoleRepository
      * Add an existing role object to the repository
      *
      * @param Role $role
+     *
+     * @return Role
      */
     public function add(Role $role);
 

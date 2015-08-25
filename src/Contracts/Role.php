@@ -3,8 +3,8 @@
 namespace Rooles\Contracts;
 
 /**
- * Class Role
- * @package App\Crm\Permission
+ * Interface Role
+ * @package Rooles\Contracts
  */
 interface Role
 {
@@ -13,8 +13,9 @@ interface Role
      * Constructor
      *
      * @param string $name
+     * @param Permissions $permissions
      */
-    public function __construct($name);
+    public function __construct($name, Permissions $permissions);
 
     /**
      * Grants a single or multiple (array) permission
@@ -44,7 +45,7 @@ interface Role
     public function cannot($permissions);
 
     /**
-     * Check permission for a single or multiple (array or "&" operator) permission query
+     * Check permission for a single or multiple permission query
      *
      * @param array|string $permissions
      *

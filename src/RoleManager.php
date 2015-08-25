@@ -3,8 +3,8 @@
 namespace Rooles;
 
 use InvalidArgumentException;
-use Rooles\Contracts\RoleRepository;
 use Rooles\Contracts\Role as RoleContract;
+use Rooles\Contracts\RoleRepository;
 use UnexpectedValueException;
 
 /**
@@ -50,11 +50,11 @@ class RoleManager implements RoleRepository
     public function get($roleName)
     {
 
-        if (empty( $roleName )) {
+        if (empty($roleName)) {
             return $this->getOrCreate('default');
         }
 
-        if (isset( $this->roles[$roleName] )) {
+        if (isset($this->roles[$roleName])) {
             return $this->roles[$roleName];
         }
 
@@ -71,23 +71,26 @@ class RoleManager implements RoleRepository
      */
     public function create($roleName)
     {
-        $role = new Role($roleName);
-        $this->add($role);
+        $role = new Role($roleName, new Permissions());
 
-        return $role;
+        return $this->add($role);
     }
 
     /**
      * Add an existing role object to the repository
      *
      * @param RoleContract $role
+     *
+     * @return Role
      */
     public function add(RoleContract $role)
     {
-        if (isset( $this->roles[$role->name()] )) {
+        if (isset($this->roles[$role->name()])) {
             throw new UnexpectedValueException('Duplicated role!');
         }
         $this->roles[$role->name()] = $role;
+
+        return $role;
     }
 
 }

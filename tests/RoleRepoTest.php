@@ -1,5 +1,6 @@
 <?php
 
+use Rooles\Permissions;
 use Rooles\Role;
 use Rooles\RoleManager;
 
@@ -71,8 +72,8 @@ class RoleRepoTest extends BaseCase
      */
     public function it_throws_exception_if_role_with_same_name_already_exists()
     {
-        $this->roleRepo->add((new Role('test'))->grant('*'));
-        $this->roleRepo->add(new Role('test'));
+        $this->roleRepo->create('test')->grant('*');
+        $this->roleRepo->add(new Role('test', new Permissions));
     }
 
     /**

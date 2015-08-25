@@ -2,7 +2,7 @@
 
 namespace Rooles;
 
-use Closure;
+use Rooles\Contracts\Permissions as PermissionsContract;
 
 /**
  * Class Role
@@ -19,20 +19,20 @@ class Role implements Contracts\Role
     protected $name;
 
     /**
-     * Permissions storage
-     *
-     * @var array
+     * @var Permissions
      */
-    protected $permissions = [];
+    protected $permissions;
 
     /**
      * Constructor
      *
      * @param string $name
+     * @param PermissionsContract|null $permissions
      */
-    public function __construct($name)
+    public function __construct($name, PermissionsContract $permissions)
     {
         $this->name = $name;
+        $this->permissions = $permissions;
     }
 
     /**
@@ -54,9 +54,9 @@ class Role implements Contracts\Role
      */
     public function grant($permissions)
     {
-        return $this->each($permissions, function ($permission) {
-            $this->setPermission($permission, '*');
-        });
+        $this->permissions->set($permissions, '*');
+
+        return $this;
     }
 
     /**
@@ -68,13 +68,13 @@ class Role implements Contracts\Role
      */
     public function deny($permissions)
     {
-        return $this->each($permissions, function ($permission) {
-            $this->setPermission($permission, '!');
-        });
+        $this->permissions->set($permissions, '!');
+
+        return $this;
     }
 
     /**
-     * Check permission for a single or multiple (array or "&" operator) permission query
+     * Check permission for a single or multiple permission query
      *
      * @param array|string $permissions
      *
@@ -82,11 +82,7 @@ class Role implements Contracts\Role
      */
     public function can($permissions)
     {
-        if (is_string($permissions)) {
-            $permissions = [$permissions];
-        }
-
-        return $this->checkPermissions($permissions);
+        return $this->permissions->check($permissions);
     }
 
     /**
@@ -123,132 +119,6 @@ class Role implements Contracts\Role
     public function isIn(array $roles)
     {
         return array_search($this->name(), $roles) !== false;
-    }
-
-    /**
-     * Store the permissions in array
-     *
-     * @param string $permission
-     * @param string $value
-     *
-     * @return void
-     */
-    protected function setPermission($permission, $value)
-    {
-        $permsLevel = &$this->permissions;
-
-        $keys = $this->explodePermission($permission);
-
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
-
-            if (isset($permsLevel[$key]) && $permsLevel[$key] === '*') {
-                $permsLevel[$key] = ['*' => '*'];
-            } elseif (!isset($permsLevel[$key]) || !is_array($permsLevel[$key])) {
-                $permsLevel[$key] = [];
-            }
-
-            $permsLevel = &$permsLevel[$key];
-        }
-
-        $permsLevel[array_shift($keys)] = $value;
-    }
-
-    /**
-     * Check permissions using OR strategy with the "|" operator
-     *
-     * @param array $permissionsArray
-     *
-     * @return bool
-     */
-    protected function checkPermissions(array $permissionsArray)
-    {
-        $result = false;
-
-        foreach ($permissionsArray as $permissions) {
-            $result = false;
-            foreach (explode('&', $permissions) as $permissionGroup) {
-                $result = false;
-                foreach (explode('|', $permissionGroup) as $permission) {
-                    if ($this->checkPermission($permission)) {
-                        $result = true;
-                    }
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Check the value of a single permission
-     *
-     * @param string $permission
-     *
-     * @return bool
-     */
-    protected function checkPermission($permission)
-    {
-        $keys = $this->explodePermission($permission);
-
-        $permsLevel = $this->permissions;
-        foreach ($keys as $part) {
-            if (isset($permsLevel[$part])) {
-                $permsLevel = $permsLevel[$part];
-            } elseif (isset($permsLevel['*'])) {
-                $permsLevel = $permsLevel['*'];
-            }
-            if ($permsLevel === '*') {
-                return true;
-            } elseif ($permsLevel === '!') {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Explode the permission string adding the wildcard at the end of the array
-     *
-     * @param string $permission
-     * @return array
-     */
-    protected function explodePermission($permission)
-    {
-        return array_merge(explode('.', $this->removeEndingWildcard($permission)), ['*']);
-    }
-
-    /**
-     * Remove the wildcard at the end of the string
-     *
-     * @param $key
-     *
-     * @return string
-     */
-    protected function removeEndingWildcard($key)
-    {
-        return preg_replace('/\.\*$/', '', $key);
-    }
-
-    /**
-     * Loop over the array or pass directly the string to the provided closure
-     *
-     * @param array|string $permissions
-     * @param callable $do
-     * @return $this
-     */
-    protected function each($permissions, Closure $do)
-    {
-        if (is_array($permissions)) {
-            foreach ($permissions as $permission) {
-                $do($permission);
-            }
-        } elseif (is_string($permissions)) {
-            $do($permissions);
-        }
-
-        return $this;
     }
 
     /**
