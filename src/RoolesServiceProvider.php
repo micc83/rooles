@@ -23,7 +23,9 @@ class RoolesServiceProvider extends ServiceProvider
             __DIR__ . '/assets/config.php' => config_path('rooles.php'),
         ]);
 
-        $this->loadViewsFrom(__DIR__ . '/assets/views', 'errors');
+        $this->publishes([
+            __DIR__ . '/assets/views/401.blade.php' => base_path('resources/views/errors/401.blade.php'),
+        ]);
 
         $this->publishes([
             __DIR__ . '/assets/migration.php' => database_path('migrations/' . date('Y_m_d_His_') . 'add_role_column_to_user_table.php')
