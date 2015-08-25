@@ -1,4 +1,6 @@
-# Rooles
+Laravel Rooles
+-------------
+#### Simple roles and permissions manager for Laravel 5.1
 
 ### Why another Laravel RBAC (Role based access control) ?!?
 
@@ -24,7 +26,7 @@ Open `config/app.php` and add the following line at the end of the providers arr
 Rooles\RoolesServiceProvider::class
 ```
     
-Run the following command from your terminal to publish the migration (it will simply add a `role` column to the default Users table) and the config files:
+Run the following command from your terminal to publish the migration file (it will simply add a `role` column to the default Users table), the config file and a default blade template for the *401-Unauthorized* view (It will not be published if one has already been created):
 
 ```sh
 $ php artisan vendor:publish
@@ -271,12 +273,13 @@ So that you can intercept it in JavaScript as follow:
 if ('error' in response) console.log(response.error.message);
 ```
 
-For normal requests in case of error a `Rooles\UnauthorizedHttpException` is thrown, which by default will result in the default error page with a `401` status code but it can be customized from the render method in `app/Exceptions/Handler.php` as follow:
+For normal requests in case of missing authorizations a `Rooles\UnauthorizedHttpException` is thrown, which by default (when debug is disabled) will result in the previously published 401 error page with a `401` status code. The page itself can be customized editing the `resources/views/errors/401.blade.php` template. 
+
+Otherwise if you'd rather not to show a view but instead implement some custom behaviour you can play with the render method in `app/Exceptions/Handler.php` as follow:
 
 ```php
 public function render($request, Exception $e)
 {
-    //...
     if ($e instanceof \Rooles\UnauthorizedHttpException) {
         redirect()->back()->with('message', 'You don\'t have the needed permissions to perform this action!');
     }
@@ -284,6 +287,20 @@ public function render($request, Exception $e)
 }
 ```
 
+This way when an Unauthorized error is thrown you'll be redirected to the calling page with a flash message. To show the flash message you can add the following to yours blade templates:
+
+```php
+@if (Session::has('message'))
+    <div class="alert alert-danger">
+        {{ Session::get('message') }}
+    </div>
+@endif
+```
+
+### Documentation
+
+I firmly believe that even the best coded application in the world is bound to failure when missing a good documentation. That's why I humbly ask to open an issue whenever you'll think something is missing or could be improved.
+
 ### Contributions
 
-I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add furthers when needed). 
+I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns, algorythms etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add further ones when needed). 
