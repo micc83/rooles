@@ -3,12 +3,13 @@
 namespace Rooles;
 
 use Rooles\Contracts\Permissions as PermissionsContract;
+use Rooles\Contracts\Role as RoleContract;
 
 /**
  * Class Role
  * @package Rooles
  */
-class Role implements Contracts\Role
+class Role implements RoleContract
 {
 
     /**
@@ -19,7 +20,7 @@ class Role implements Contracts\Role
     protected $name;
 
     /**
-     * @var Permissions
+     * @var PermissionsContract
      */
     protected $permissions;
 
@@ -27,7 +28,7 @@ class Role implements Contracts\Role
      * Constructor
      *
      * @param string $name
-     * @param PermissionsContract|null $permissions
+     * @param PermissionsContract $permissions
      */
     public function __construct($name, PermissionsContract $permissions)
     {
