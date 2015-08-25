@@ -66,7 +66,7 @@ interface Role
      *
      * @param array $roles
      *
-     * @return mixed
+     * @return bool
      */
     public function isIn(array $roles);
 
