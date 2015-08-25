@@ -83,7 +83,7 @@ class Role implements RoleContract
      */
     public function can($permissions)
     {
-        return $this->permissions->check($permissions);
+        return $this->permissions->evaluate($permissions);
     }
 
     /**

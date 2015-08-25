@@ -20,10 +20,10 @@ interface Permissions
     /**
      * Check permissions string or array
      *
-     * @param array|string $permissions
+     * @param array|string $query
      *
      * @return bool
      */
-    public function check($permissions);
+    public function evaluate($query);
 
 }

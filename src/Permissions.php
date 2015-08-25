@@ -26,15 +26,9 @@ class Permissions implements PermissionsContract
      */
     public function set($permissions, $value)
     {
-
-        if (is_string($permissions)) {
-            $permissions = [$permissions];
-        }
-
-        foreach ($permissions as $permission) {
+        foreach ((array)$permissions as $permission) {
             $this->setPermission($permission, $value);
         }
-
     }
 
     /**
@@ -69,32 +63,85 @@ class Permissions implements PermissionsContract
     /**
      * Check permissions string or array
      *
-     * @param array|string $permissions
+     * @param array|string $query
      *
      * @return bool
      */
-    public function check($permissions)
+    public function evaluate($query)
     {
-
-        if (is_string($permissions)) {
-            $permissions = [$permissions];
-        }
-
-        $result = false;
-
-        foreach ($permissions as $permissionGroups) {
-            $result = false;
-            foreach (explode('&', $permissionGroups) as $permissionGroup) {
-                $result = false;
-                foreach (explode('|', $permissionGroup) as $permission) {
-                    if ($this->checkPermission($permission)) {
-                        $result = true;
-                    }
+        foreach ($this->parseQuery($query) as $andPermissions) {
+            foreach ($andPermissions as $orPermission) {
+                if ($result = $this->evaluatePermission($orPermission)) {
+                    break;
                 }
+            }
+            if (!$result) {
+                return false;
             }
         }
 
-        return $result;
+        return true;
+    }
+
+    /**
+     * Parse the query
+     *
+     * If a string is provided it will be converted
+     * to array. AND and OR operator will be parsed
+     * in order to get a multidimensional array of
+     * the requested permissions.
+     *
+     * @param array|string $query
+     * @return array
+     */
+    protected function parseQuery($query)
+    {
+        return $this->parseOrOperator(
+            $this->parseAndOperator((array)$query)
+        );
+    }
+
+    /**
+     * Parse the query AND conditions
+     *
+     * It's applied when passing array of permissions
+     * or when using the "&" operator
+     *
+     * @param array $query
+     * @param string $operator
+     *
+     * @return array
+     */
+    protected function parseAndOperator(array $query, $operator = '&')
+    {
+        $permissions = [];
+        foreach ($query as $permissionsGroup) {
+            foreach (explode($operator, $permissionsGroup) as $andPerms) {
+                $permissions[] = $andPerms;
+            }
+        }
+        return $permissions;
+    }
+
+    /**
+     * Parse the query OR conditions
+     *
+     * It's applied when using the "|" operator
+     *
+     * @param array $query
+     * @param string $operator
+     *
+     * @return array
+     */
+    protected function parseOrOperator(array $query, $operator = '|')
+    {
+        $permissions = [];
+        foreach ($query as $key => $orPerms) {
+            foreach (explode($operator, $orPerms) as $permission) {
+                $permissions[$key][] = $permission;
+            }
+        }
+        return $permissions;
     }
 
     /**
@@ -104,12 +151,11 @@ class Permissions implements PermissionsContract
      *
      * @return bool
      */
-    protected function checkPermission($permission)
+    protected function evaluatePermission($permission)
     {
-        $keys = $this->explodePermission($permission);
-
         $permsLevel = $this->permissions;
-        foreach ($keys as $part) {
+
+        foreach ($this->explodePermission($permission) as $part) {
             if (isset($permsLevel[$part])) {
                 $permsLevel = $permsLevel[$part];
             } elseif (isset($permsLevel['*'])) {
