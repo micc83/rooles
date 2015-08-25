@@ -5,7 +5,6 @@ namespace Rooles;
 use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Class RoleMiddleware

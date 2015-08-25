@@ -8,6 +8,8 @@ use Rooles\Contracts\RoleRepository;
 /**
  * Class Role
  * @package App\Crm\Permission\Traits
+ *
+ * @property \Rooles\Contracts\Role|string $role
  */
 trait UserRole
 {
@@ -17,7 +19,7 @@ trait UserRole
      *
      * @param string $role
      *
-     * @return \Rooles\Role
+     * @return \Rooles\Contracts\Role
      */
     public function getRoleAttribute($role)
     {

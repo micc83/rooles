@@ -49,7 +49,7 @@ class RoolesServiceProvider extends ServiceProvider
      *
      * @param RoleRepository $roleRepo
      *
-     * @return RoleManager
+     * @return RoleRepository
      */
     public function registerRoles(RoleRepository $roleRepo)
     {
