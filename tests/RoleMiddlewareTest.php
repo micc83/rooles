@@ -34,7 +34,9 @@ class RoleMiddlewareTest extends BaseCase
      */
     public function it_throw_exception_if_user_not_logged_in()
     {
-        $this->get('restricted')->dontSee('Hello World')->seeStatusCode(401);
+        $this->visitAndCatchException('restricted', 'Rooles\UnauthorizedHttpException')
+             ->dontSee('Hello World')
+             ->seeStatusCode(401);
     }
 
     /**
@@ -48,7 +50,9 @@ class RoleMiddlewareTest extends BaseCase
             'role' => 'operator'
         ]));
 
-        $this->get('restricted')->dontSee('Hello World')->seeStatusCode(401);
+        $this->visitAndCatchException('restricted', 'Rooles\UnauthorizedHttpException')
+             ->dontSee('Hello World')
+             ->seeStatusCode(401);
 
     }
 

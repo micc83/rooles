@@ -46,9 +46,9 @@ class PermsMiddlewareTest extends BaseCase
      */
     public function it_throw_exception_if_user_not_logged_in()
     {
-
-        $this->get('restricted')->dontSee('Done!')->seeStatusCode(401);
-
+        $this->visitAndCatchException('restricted', 'Rooles\UnauthorizedHttpException')
+             ->dontSee('Done!')
+             ->seeStatusCode(401);
     }
 
     /**
@@ -59,10 +59,12 @@ class PermsMiddlewareTest extends BaseCase
 
         $this->be(new UserMock([
             'name' => 'Jhonny Mnemonic',
-            'role' => 'user'
+            'role' => 'operator'
         ]));
 
-        $this->get('restricted')->dontSee('Done!')->seeStatusCode(401);
+        $this->visitAndCatchException('veryRestricted', 'Rooles\UnauthorizedHttpException')
+             ->dontSee('Done!')
+             ->seeStatusCode(401);
 
     }
 
@@ -78,7 +80,6 @@ class PermsMiddlewareTest extends BaseCase
         ]));
 
         $this->get('restricted')->see('Done!');
-        $this->get('veryRestricted')->dontSee('Done!')->seeStatusCode(401);
 
         $this->be(new UserMock([
             'name' => 'Master',

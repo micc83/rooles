@@ -40,10 +40,25 @@ abstract class BaseCase extends TestCase
     }
 
     /**
-     * Catch the Exception Class
+     * Visit a page and assert it throws an exception with the name provided
+     *
+     * @param string $page
+     * @param string $exceptionClass
+     *
+     * @return $this
+     */
+    public function visitAndCatchException($page, $exceptionClass)
+    {
+        return $this->catchException(function () use ($page) {
+            $this->visit($page);
+        }, $exceptionClass);
+    }
+
+    /**
+     * Catch the Exception Class name and assert its equal to the one given
      *
      * @param Closure $do
-     * @param         $exceptionClass
+     * @param string  $exceptionClass
      *
      * @return $this
      */
@@ -54,6 +69,7 @@ abstract class BaseCase extends TestCase
         } catch (PHPUnit_Framework_ExpectationFailedException $e) {
             $this->assertEquals($exceptionClass, get_class($e->getPrevious()));
         }
+
         return $this;
     }
 
