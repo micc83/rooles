@@ -62,20 +62,21 @@ class Role implements Contracts\Role
      */
     protected function setGrant($permission)
     {
-        $this->array_set($this->permissions, $permission, '*');
+        $this->setPermission($permission, '*');
     }
 
     /**
-     * Store the grants/deny in array
+     * Store the permissions in array
      *
-     * @param $array
      * @param $key
      * @param $value
      *
      * @return mixed
      */
-    protected function array_set(&$array, $key, $value)
+    protected function setPermission($key, $value)
     {
+
+        $permissions = &$this->permissions;
 
         $keys = explode('.', $this->removeEndingWildcard($key));
 
@@ -84,18 +85,17 @@ class Role implements Contracts\Role
         while (count($keys) > 1) {
             $key = array_shift($keys);
 
-            if (isset( $array[$key] ) && $array[$key] === '*') {
-                $array[$key] = ['*' => '*'];
-            } elseif ( ! isset( $array[$key] ) || ! is_array($array[$key])) {
-                $array[$key] = [];
+            if (isset( $permissions[$key] ) && $permissions[$key] === '*') {
+                $permissions[$key] = ['*' => '*'];
+            } elseif ( ! isset( $permissions[$key] ) || ! is_array($permissions[$key])) {
+                $permissions[$key] = [];
             }
 
-            $array = &$array[$key];
+            $permissions = &$permissions[$key];
         }
 
-        $array[array_shift($keys)] = $value;
+        $permissions[array_shift($keys)] = $value;
 
-        return $array;
     }
 
     /**
@@ -137,7 +137,7 @@ class Role implements Contracts\Role
      */
     protected function setDeny($permission)
     {
-        $this->array_set($this->permissions, $permission, '!');
+        $this->setPermission($permission, '!');
     }
 
     /**
