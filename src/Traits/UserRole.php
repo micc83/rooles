@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\App;
 use Rooles\Contracts\RoleRepository;
 
 /**
- * Class Role
- * @package App\Crm\Permission\Traits
+ * Class UserRole
+ * @package Rooles\Traits
  *
  * @property \Rooles\Contracts\Role|string $role
  */
