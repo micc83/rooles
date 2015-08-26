@@ -281,19 +281,21 @@ Otherwise if you'd rather not to show a view but instead implement some custom b
 public function render($request, Exception $e)
 {
     if ($e instanceof \Rooles\UnauthorizedHttpException) {
-        redirect()->back()->with('message', 'You don\'t have the needed permissions to perform this action!');
+        return redirect('/')->withErrors(['You don\'t have the needed permissions to perform this action!']);
     }
     return parent::render($request, $e);
 }
 ```
 
-This way when an Unauthorized error is thrown you'll be redirected to the calling page with a flash message. To show the flash message you can add the following to yours blade templates:
+This way when an Unauthorized error is thrown you'll be redirected to the given page with an error flash message. To show the message you can add the following to your blade template:
 
 ```php
-@if (Session::has('message'))
-    <div class="alert alert-danger">
-        {{ Session::get('message') }}
-    </div>
+@if ($errors->has())
+<div class="alert alert-danger">
+    @foreach ($errors->all() as $error)
+        {{ $error }}
+    @endforeach
+</div>
 @endif
 ```
 
