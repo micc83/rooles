@@ -161,13 +161,13 @@ Multiple operators can ben be joined together but mind that AND operators have a
 
 ### Checking for User role
 
-You can make a more general assertion checking for the user role:
+You can make a more general assertion checking for the user role (case insensitive):
 
 ```php
 if ( $user->role->is('admin') ) echo 'Hello Boss';
 ```
     
-Or check if the user role is in a given range:
+Or check if the user role is in a given range (still case insensitive):
 
 ```php
 if ( $user->role->isIn(['lamer', 'trool']) ) echo 'Hello Looser';
@@ -179,7 +179,13 @@ You can also get the User role name using one of the following syntax:
 // If in a string context:
 echo $user->role;
 // Otherwise:
-if ($user->role->name() === 'admin') // Do something
+if ($user->role->name() === 'Admin') // Do something
+```
+
+On the RoleManager each Role is assigned an ID which is nothing else than the name in lowercase (UTF8 support). If you need to make some comparison, like for example in a Select input field you better use the ID instead of the name. Example:
+
+```php
+{!! Form::select('role', ['editor' => 'Editor', 'admin' => 'Administrator'], $user->role->id()) !!}
 ```
 
 ### Protect routes and Controllers through Middlewares
