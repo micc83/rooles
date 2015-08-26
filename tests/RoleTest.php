@@ -86,4 +86,16 @@ class RoleTest extends BaseCase
 
     }
 
+    /**
+     * @test
+     */
+    public function method_is_and_isIn_are_case_insensitive () {
+
+        $role = new Role('Role', new Permissions);
+
+        $this->assertTrue($role->is('role'));
+        $this->assertTrue($role->isIn(['ROLE', 'test']));
+
+    }
+
 }

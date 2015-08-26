@@ -117,7 +117,7 @@ class Role implements RoleContract
      */
     public function is($roleName)
     {
-        return $this->name() === $roleName;
+        return $this->id() === mb_strtolower($roleName);
     }
 
     /**
@@ -129,7 +129,7 @@ class Role implements RoleContract
      */
     public function isIn(array $roles)
     {
-        return array_search($this->name(), $roles) !== false;
+        return array_search($this->id(), array_map('mb_strtolower', $roles)) !== false;
     }
 
     /**

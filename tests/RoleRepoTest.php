@@ -81,7 +81,7 @@ class RoleRepoTest extends BaseCase
      * @expectedException UnexpectedValueException
      * @expectedExceptionMessage Duplicated role!
      */
-    public function stored_role_id_is_case_insensitive () {
+    public function role_keys_are_case_insensitive () {
         $this->roleRepo->create('Test');
         $this->roleRepo->get('test')->grant('*');
         $this->roleRepo->add(new Role('test', new Permissions));
