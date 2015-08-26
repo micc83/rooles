@@ -175,16 +175,18 @@ class PermissionsTest extends BaseCase
         $permissions->set([
             'users',
             'customers.*.read',
-            '*.drafts'
+            '*.drafts',
         ], '*')->set([
             'users.delete',
             'customers.*.write',
-            '*.drafts.delete'
+            '*.drafts.delete',
+            '*.drafts.read'
         ],'!');
 
-        $this->assertFalse($permissions->evaluate('comments.drafts.*.fully'));
-
-        return;
+        // To fix this I should think about checking on different paths
+        // or think about a specification such as:
+        // Una regola precisa passa sopra ad una dichiarata con wildcard...
+        $this->assertFalse($permissions->evaluate('customers.drafts.read'));
 
         $this->assertFalse($permissions->evaluate('*'));
 
@@ -210,13 +212,22 @@ class PermissionsTest extends BaseCase
         $this->assertFalse($permissions->evaluate('customers.*.*.read'));
         $this->assertFalse($permissions->evaluate('customers.*.*.*.read'));
 
-        $this->assertTrue($permissions->evaluate('comments.drafts.read'));
-        $this->assertTrue($permissions->evaluate('comments.drafts.read.fully'));
+        $this->assertTrue($permissions->evaluate('comments.drafts.show'));
+        $this->assertTrue($permissions->evaluate('comments.drafts.show.fully'));
+        $this->assertTrue($permissions->evaluate('*.drafts.show'));
+        $this->assertTrue($permissions->evaluate('*.drafts.show.*'));
 
         $this->assertFalse($permissions->evaluate('comments.drafts'));
-
         $this->assertFalse($permissions->evaluate('comments.drafts.delete'));
         $this->assertFalse($permissions->evaluate('comments.drafts.delete.fully'));
+        $this->assertFalse($permissions->evaluate('comments.drafts.*.fully'));
+        $this->assertFalse($permissions->evaluate('comments.drafts.*.fully.*'));
+
+        $this->assertTrue($permissions->evaluate('users.drafts.delete'));
+
+        $this->assertFalse($permissions->evaluate('customers.drafts.delete'));
+        $this->assertFalse($permissions->evaluate('customers.drafts.write'));
+        $this->assertFalse($permissions->evaluate('customers.drafts.play'));
 
     }
 

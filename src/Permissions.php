@@ -175,9 +175,8 @@ class Permissions implements PermissionsContract
                 $wip = true;
                 $permsLevel = $permsLevel['*'];
             }
-            if ($permsLevel === '*' && count($prevLevel) === 1) {
-                dump(3);
-                return true;
+            if ($permsLevel === '*') {
+                return !($part === '*' && count($prevLevel) !== 1);
             } elseif ($permsLevel === '!') {
                 dump(4);
                 return false;
