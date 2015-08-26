@@ -47,6 +47,16 @@ class Role implements RoleContract
     }
 
     /**
+     * Return role id
+     *
+     * @return string
+     */
+    public function id()
+    {
+        return mb_strtolower($this->name());
+    }
+
+    /**
      * Grants a single or multiple (array) permission
      *
      * @param array|string $permissions

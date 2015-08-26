@@ -79,6 +79,13 @@ interface Role
     public function name();
 
     /**
+     * Return role id
+     *
+     * @return string
+     */
+    public function id();
+
+    /**
      * If the object is called as a string will return the role name
      *
      * @return string

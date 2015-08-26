@@ -50,8 +50,10 @@ class RoleManager implements RoleRepository
     public function get($roleName)
     {
 
+        $roleName = mb_strtolower($roleName);
+
         if (empty($roleName)) {
-            return $this->getOrCreate('default');
+            return $this->getOrCreate('Default');
         }
 
         if (isset($this->roles[$roleName])) {
@@ -85,10 +87,10 @@ class RoleManager implements RoleRepository
      */
     public function add(RoleContract $role)
     {
-        if (isset($this->roles[$role->name()])) {
+        if (isset($this->roles[$role->id()])) {
             throw new UnexpectedValueException('Duplicated role!');
         }
-        $this->roles[$role->name()] = $role;
+        $this->roles[$role->id()] = $role;
 
         return $role;
     }

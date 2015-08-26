@@ -78,10 +78,23 @@ class RoleRepoTest extends BaseCase
 
     /**
      * @test
+     * @expectedException UnexpectedValueException
+     * @expectedExceptionMessage Duplicated role!
+     */
+    public function stored_role_id_is_case_insensitive () {
+        $this->roleRepo->create('Test');
+        $this->roleRepo->get('test')->grant('*');
+        $this->roleRepo->add(new Role('test', new Permissions));
+    }
+
+    /**
+     * @test
      */
     public function if_empty_rolename_is_requested_return_a_default_empty_role()
     {
-        $this->assertEquals('default', $this->roleRepo->get('')->name());
+        $this->assertEquals('Default', $this->roleRepo->get('')->name());
     }
+
+
 
 }
