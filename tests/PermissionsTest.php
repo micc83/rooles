@@ -47,15 +47,14 @@ class PermissionsTest extends BaseCase
         ], '*');
 
         $permissions->set([
-            'users.*.write',
-            'users.write'
+            'users.*.write'
         ], '!');
 
-        $this->assertTrue($permissions->evaluate('users.read'));
+        $this->assertTrue($permissions->evaluate('users.customers.read'));
         $this->assertTrue($permissions->evaluate('users.customers.all.write.poems'));
 
-        $this->assertFalse($permissions->evaluate('users.write'));
-        $this->assertFalse($permissions->evaluate('users.admin.write'));
+        $this->assertFalse($permissions->evaluate('users.customers.write'));
+        $this->assertFalse($permissions->evaluate('users.admins.write'));
 
     }
 
@@ -162,6 +161,62 @@ class PermissionsTest extends BaseCase
             'users.delete|users.remove&users.remove|customers.read&users.read|users.delete|customers.read',
             'customers.read&users.delete'
         ]));
+
+    }
+
+
+    /**
+     * @test
+     */
+    public function it_should_pass_complex_queries () {
+
+        $permissions = new Permissions();
+
+        $permissions->set([
+            'users',
+            'customers.*.read',
+            '*.drafts'
+        ], '*')->set([
+            'users.delete',
+            'customers.*.write',
+            '*.drafts.delete'
+        ],'!');
+
+        $this->assertFalse($permissions->evaluate('comments.drafts.*.fully'));
+
+        return;
+
+        $this->assertFalse($permissions->evaluate('*'));
+
+        $this->assertTrue($permissions->evaluate('users.read'));
+        $this->assertTrue($permissions->evaluate('users.read.lot'));
+        $this->assertTrue($permissions->evaluate('users.read.*'));
+        $this->assertTrue($permissions->evaluate('users.read.*.*'));
+        $this->assertTrue($permissions->evaluate('users.read.*.*.*'));
+        $this->assertTrue($permissions->evaluate('users.read.*.*.*.read'));
+
+        $this->assertFalse($permissions->evaluate('users.delete'));
+        $this->assertFalse($permissions->evaluate('users.*'));
+
+        $this->assertTrue($permissions->evaluate('customers.books.read'));
+        $this->assertTrue($permissions->evaluate('customers.books.read.*.*'));
+        $this->assertTrue($permissions->evaluate('customers.books.read.*.*.all'));
+        $this->assertTrue($permissions->evaluate('customers.magazines.read'));
+        $this->assertTrue($permissions->evaluate('customers.magazines.old.read'));
+
+        $this->assertFalse($permissions->evaluate('customers.*'));
+        $this->assertFalse($permissions->evaluate('customers.*.write'));
+        $this->assertFalse($permissions->evaluate('customers.*.*'));
+        $this->assertFalse($permissions->evaluate('customers.*.*.read'));
+        $this->assertFalse($permissions->evaluate('customers.*.*.*.read'));
+
+        $this->assertTrue($permissions->evaluate('comments.drafts.read'));
+        $this->assertTrue($permissions->evaluate('comments.drafts.read.fully'));
+
+        $this->assertFalse($permissions->evaluate('comments.drafts'));
+
+        $this->assertFalse($permissions->evaluate('comments.drafts.delete'));
+        $this->assertFalse($permissions->evaluate('comments.drafts.delete.fully'));
 
     }
 

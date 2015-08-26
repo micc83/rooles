@@ -62,12 +62,11 @@ class RoleTest extends BaseCase
         ]);
 
         $areaManager->deny([
-            'users.*.write',
-            'users.write'
+            'users.*.write'
         ]);
 
-        $this->assertTrue($areaManager->can('users.read'));
-        $this->assertFalse($areaManager->can('users.write'));
+        $this->assertTrue($areaManager->can('users.customers.read'));
+        $this->assertFalse($areaManager->can('users.admins.write'));
 
     }
 

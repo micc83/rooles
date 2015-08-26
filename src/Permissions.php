@@ -23,12 +23,16 @@ class Permissions implements PermissionsContract
      *
      * @param string|array $permissions
      * @param string $value
+     *
+     * @return $this
      */
     public function set($permissions, $value)
     {
         foreach ((array)$permissions as $permission) {
             $this->setPermission($permission, $value);
         }
+
+        return $this;
     }
 
     /**
@@ -155,19 +159,34 @@ class Permissions implements PermissionsContract
     {
         $permsLevel = $this->permissions;
 
-        foreach ($this->explodePermission($permission) as $part) {
+        //dump('Permission: ' . $permission);
+        $permissions = $this->explodePermission($permission);
+        foreach ($permissions as $key => $part) {
+            dump($part);
+            dump($permsLevel);
+            $wip = false;
+            $prevLevel = $permsLevel;
             if (isset($permsLevel[$part])) {
+                dump(1);
+                $wip = true;
                 $permsLevel = $permsLevel[$part];
             } elseif (isset($permsLevel['*'])) {
+                dump(2);
+                $wip = true;
                 $permsLevel = $permsLevel['*'];
             }
-            if ($permsLevel === '*') {
+            if ($permsLevel === '*' && count($prevLevel) === 1) {
+                dump(3);
                 return true;
             } elseif ($permsLevel === '!') {
+                dump(4);
+                return false;
+            } elseif (!$wip && $part === '*'){
+                dump(6);
                 return false;
             }
         }
-
+        dump(5);
         return false;
     }
 
