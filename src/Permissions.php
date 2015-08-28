@@ -158,22 +158,16 @@ class Permissions implements PermissionsContract
     protected function evaluatePermission($permission)
     {
         $permsLevel = $this->permissions;
-        $permissions = $this->explodePermission($permission);
-        foreach ($permissions as $key => $part) {
-            $wip = false;
-            $prevLevel = $permsLevel;
-            if (isset($permsLevel[$part])) {
-                $wip = true;
-                $permsLevel = $permsLevel[$part];
-            } elseif (isset($permsLevel['*'])) {
-                $wip = true;
-                $permsLevel = $permsLevel['*'];
-            }
-            if ($permsLevel === '*') {
-                return !($part === '*' && $this->findDeniesOnLowerLevels($prevLevel));
-            } elseif ($permsLevel === '!') {
-                return false;
-            } elseif (!$wip && $part === '*') {
+        foreach ($this->explodePermission($permission) as $part) {
+            if (isset($permsLevel[$part]) || isset($permsLevel['*'])) {
+                $key = (isset($permsLevel[$part])) ? $part : '*';
+                if ($permsLevel[$key] === '*') {
+                    return !($part === '*' && $this->findDeniesOnLowerLevels($permsLevel));
+                } elseif ($permsLevel[$key] === '!') {
+                    return false;
+                }
+                $permsLevel = $permsLevel[$key];
+            } elseif ($part === '*') {
                 return false;
             }
         }
@@ -183,16 +177,15 @@ class Permissions implements PermissionsContract
     /**
      * Find it here's a deny rule on a lower level
      *
-     * @param $prevLevel
+     * @param $currentLevel
      *
      * @return bool
      */
-    protected function findDeniesOnLowerLevels($prevLevel)
+    protected function findDeniesOnLowerLevels($currentLevel)
     {
-        while (count($prevLevel) > 0) {
-            $keys = array_shift($prevLevel);
-            if (is_array($keys)) {
-                if (isset($keys['*']) && $keys['*'] === '!' || $this->findDeniesOnLowerLevels($keys)) {
+        foreach ($currentLevel as $levels){
+            if (is_array($levels)) {
+                if (isset($levels['*']) && $levels['*'] === '!' || $this->findDeniesOnLowerLevels($levels)) {
                     return true;
                 }
             }
