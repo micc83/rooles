@@ -15,7 +15,7 @@ class PermissionQuery
     protected $query;
 
     /**
-     * @var array
+     * @var array|string
      */
     protected $permissions;
 
