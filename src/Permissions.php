@@ -158,34 +158,37 @@ class Permissions implements PermissionsContract
     protected function evaluatePermission($permission)
     {
         $permsLevel = $this->permissions;
-
-        //dump('Permission: ' . $permission);
         $permissions = $this->explodePermission($permission);
         foreach ($permissions as $key => $part) {
-            dump($part);
-            dump($permsLevel);
             $wip = false;
             $prevLevel = $permsLevel;
             if (isset($permsLevel[$part])) {
-                dump(1);
                 $wip = true;
                 $permsLevel = $permsLevel[$part];
             } elseif (isset($permsLevel['*'])) {
-                dump(2);
                 $wip = true;
                 $permsLevel = $permsLevel['*'];
             }
             if ($permsLevel === '*') {
-                return !($part === '*' && count($prevLevel) !== 1);
-            } elseif ($permsLevel === '!') {
-                dump(4);
+                return !($part === '*' && $this->findDeniesOnLowerLevels($prevLevel));
+            } elseif ($permsLevel === '!' ) {
                 return false;
             } elseif (!$wip && $part === '*'){
-                dump(6);
                 return false;
             }
         }
-        dump(5);
+        return false;
+    }
+
+    protected function findDeniesOnLowerLevels ($prevLevel) {
+        while (count($prevLevel) > 0){
+            $keys = array_shift($prevLevel);
+            if (is_array($keys)){
+                if (isset($keys['*']) && $keys['*'] === '!' || $this->findDeniesOnLowerLevels($keys)){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
