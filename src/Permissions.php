@@ -46,12 +46,12 @@ class Permissions implements PermissionsContract
     {
         $permsLevel = &$this->permissions;
 
-        $keys = $this->explodePermission($permission);
+        $keys = Helpers::explodePermission($permission);
 
         while (count($keys) > 1) {
             $key = array_shift($keys);
 
-            if (isset($permsLevel[$key]) && $permsLevel[$key] === '*') {
+            if (isset($permsLevel[$key]) && Helpers::isWildcard($permsLevel[$key])) {
                 $permsLevel[$key] = ['*' => '*'];
             } elseif (!isset($permsLevel[$key]) || !is_array($permsLevel[$key])) {
                 $permsLevel[$key] = [];
@@ -112,15 +112,14 @@ class Permissions implements PermissionsContract
      * or when using the "&" operator
      *
      * @param array $query
-     * @param string $operator
      *
      * @return array
      */
-    protected function parseAndOperator(array $query, $operator = '&')
+    protected function parseAndOperator(array $query)
     {
         $permissions = [];
         foreach ($query as $permissionsGroup) {
-            foreach (explode($operator, $permissionsGroup) as $andPerms) {
+            foreach (explode('&', $permissionsGroup) as $andPerms) {
                 $permissions[] = $andPerms;
             }
         }
@@ -133,15 +132,14 @@ class Permissions implements PermissionsContract
      * It's applied when using the "|" operator
      *
      * @param array $query
-     * @param string $operator
      *
      * @return array
      */
-    protected function parseOrOperator(array $query, $operator = '|')
+    protected function parseOrOperator(array $query)
     {
         $permissions = [];
         foreach ($query as $key => $orPerms) {
-            foreach (explode($operator, $orPerms) as $permission) {
+            foreach (explode('|', $orPerms) as $permission) {
                 $permissions[$key][] = $permission;
             }
         }
@@ -157,64 +155,7 @@ class Permissions implements PermissionsContract
      */
     protected function evaluatePermission($permission)
     {
-        $permsLevel = $this->permissions;
-        foreach ($this->explodePermission($permission) as $part) {
-            if (isset($permsLevel[$part]) || isset($permsLevel['*'])) {
-                $key = (isset($permsLevel[$part])) ? $part : '*';
-                if ($permsLevel[$key] === '*') {
-                    return !($part === '*' && $this->findDeniesOnLowerLevels($permsLevel));
-                } elseif ($permsLevel[$key] === '!') {
-                    return false;
-                }
-                $permsLevel = $permsLevel[$key];
-            } elseif ($part === '*') {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Find it here's a deny rule on a lower level
-     *
-     * @param $currentLevel
-     *
-     * @return bool
-     */
-    protected function findDeniesOnLowerLevels($currentLevel)
-    {
-        foreach ($currentLevel as $levels){
-            if (is_array($levels)) {
-                if (isset($levels['*']) && $levels['*'] === '!' || $this->findDeniesOnLowerLevels($levels)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Explode the permission string adding the wildcard at the end of the array
-     *
-     * @param string $permission
-     *
-     * @return array
-     */
-    protected function explodePermission($permission)
-    {
-        return array_merge(explode('.', $this->removeEndingWildcard($permission)), ['*']);
-    }
-
-    /**
-     * Remove the wildcard at the end of the string
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    protected function removeEndingWildcard($key)
-    {
-        return preg_replace('/\.\*$/', '', $key);
+        return (new PermissionQuery($permission, $this->permissions))->run();
     }
 
 }
