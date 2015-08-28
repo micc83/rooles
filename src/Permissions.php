@@ -13,7 +13,6 @@ class Permissions implements PermissionsContract
 
     /**
      * Permissions storage
-     *
      * @var array
      */
     protected $permissions = [];
@@ -24,7 +23,7 @@ class Permissions implements PermissionsContract
      * @param string|array $permissions
      * @param string $value
      *
-     * @return $this
+     * @return Permissions
      */
     public function set($permissions, $value)
     {
@@ -96,6 +95,7 @@ class Permissions implements PermissionsContract
      * the requested permissions.
      *
      * @param array|string $query
+     *
      * @return array
      */
     protected function parseQuery($query)
@@ -171,20 +171,28 @@ class Permissions implements PermissionsContract
             }
             if ($permsLevel === '*') {
                 return !($part === '*' && $this->findDeniesOnLowerLevels($prevLevel));
-            } elseif ($permsLevel === '!' ) {
+            } elseif ($permsLevel === '!') {
                 return false;
-            } elseif (!$wip && $part === '*'){
+            } elseif (!$wip && $part === '*') {
                 return false;
             }
         }
         return false;
     }
 
-    protected function findDeniesOnLowerLevels ($prevLevel) {
-        while (count($prevLevel) > 0){
+    /**
+     * Find it here's a deny rule on a lower level
+     *
+     * @param $prevLevel
+     *
+     * @return bool
+     */
+    protected function findDeniesOnLowerLevels($prevLevel)
+    {
+        while (count($prevLevel) > 0) {
             $keys = array_shift($prevLevel);
-            if (is_array($keys)){
-                if (isset($keys['*']) && $keys['*'] === '!' || $this->findDeniesOnLowerLevels($keys)){
+            if (is_array($keys)) {
+                if (isset($keys['*']) && $keys['*'] === '!' || $this->findDeniesOnLowerLevels($keys)) {
                     return true;
                 }
             }
@@ -196,6 +204,7 @@ class Permissions implements PermissionsContract
      * Explode the permission string adding the wildcard at the end of the array
      *
      * @param string $permission
+     *
      * @return array
      */
     protected function explodePermission($permission)
@@ -206,7 +215,7 @@ class Permissions implements PermissionsContract
     /**
      * Remove the wildcard at the end of the string
      *
-     * @param $key
+     * @param string $key
      *
      * @return string
      */

@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\Guard;
  */
 abstract class BaseMiddleware
 {
+
     /**
      * @var RoleManager
      */
@@ -36,8 +37,8 @@ abstract class BaseMiddleware
      * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
-     * @param string                    $param
+     * @param  \Closure $next
+     * @param string $param
      *
      * @return mixed
      * @throws UnauthorizedHttpException
@@ -48,7 +49,7 @@ abstract class BaseMiddleware
         /** @var User $user */
         $user = $this->auth->user();
 
-        if ( ! $user || $this->verifyCondition($param, $user)) {
+        if (!$user || $this->verifyCondition($param, $user)) {
             if ($request->ajax()) {
                 return response()->json([
                     'error' => [

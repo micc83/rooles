@@ -61,7 +61,7 @@ class Role implements RoleContract
      *
      * @param array|string $permissions
      *
-     * @return $this
+     * @return Role
      */
     public function grant($permissions)
     {
@@ -75,7 +75,7 @@ class Role implements RoleContract
      *
      * @param array|string $permissions
      *
-     * @return $this
+     * @return Role
      */
     public function deny($permissions)
     {

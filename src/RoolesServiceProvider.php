@@ -41,7 +41,7 @@ class RoolesServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(RoleRepository::class, function () {
+        $this->app->singleton(RoleRepository::class, function() {
             return $this->registerRoles(new RoleManager);
         });
     }
