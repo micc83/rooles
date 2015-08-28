@@ -22,7 +22,7 @@ interface Role
      *
      * @param array|string $permissions
      *
-     * @return $this;
+     * @return Role
      */
     public function grant($permissions);
 
@@ -31,7 +31,7 @@ interface Role
      *
      * @param array|string $permissions
      *
-     * @return $this;
+     * @return Role
      */
     public function deny($permissions);
 
