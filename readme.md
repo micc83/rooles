@@ -1,4 +1,4 @@
-Laravel Rooles
+Laravel Rooles [![Build Status](https://travis-ci.org/micc83/rooles.svg?branch=master)](https://travis-ci.org/micc83/rooles) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/micc83/rooles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/micc83/rooles/?branch=master)
 -------------
 #### Simple roles and permissions manager for Laravel 5.1
 
@@ -99,10 +99,6 @@ All the permissions for any given role are set in the `config/rooles.php` file a
     ]
 ];
 ```
-    
-The **wildcard character "\*"** is used to define a whole subset of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array. 
-
-> The wildcard character at the end of a permission string can be omitted as `users` and `users.*` are the same.
 
 The `default` role is applied to any user which has no role applied and provides no permissions unless differently stated in the config file.
 
@@ -114,6 +110,29 @@ app()->make(\Rooles\Contracts\RoleRepository::class)
      ->grant(['cart.*', 'products.buy'])
      ->deny('cart.discount');
 ```
+
+### Permissions strategy
+
+There are four main concept to remember when creating a permissions strategy for **Rooles**:
+
+1. Every role always start with **no permissions**;
+2. The **wildcard character** \* is used to define a whole subset of available permissions. For example if we take in consideration the grant `users.*.ban`, that means that editors can ban any group of users ( `users.reader`, `users.author` etc... ) but not `users.admin` as the permission has been denied in the deny array.
+3. When you grant or deny a permission, if not already set, a *wildcard will be automatically appended* so `customers` is the same as `customers.*`. That also means that any child permission of the given one will be granted or denied, for example:
+    ```php
+        $role->grant('comments'); // Same as writing comments.*
+        
+        $role->can('comments.write'); // true
+        $role->can('comments.pingbacks.write') // true
+    ```
+4. When you apply both grants and denies in order to figure out which rule will 'win' you'll have to think in terms of **specificity**. The more specific rule will always win. Let's see an example:
+    ```php
+        $role->grant('comments.write.*') // Same as writing comments.write
+             ->deny('*.write');
+        
+        $role->can('comments.write'); // true
+        $role->can('users.write') // false
+    ```
+As you probably guessed from the example specificity is calculated on the position of the wildcards and length of the permission. As you move the wildcard to the right you gain in specificity.
 
 ### Checking for User permissions
 
@@ -311,4 +330,4 @@ I firmly believe that even the best coded application in the world is bound to f
 
 ### Contributions
 
-I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns, algorythms etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add further ones when needed). 
+I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns, algorythms etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add furthers when needed). 
