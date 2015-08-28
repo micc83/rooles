@@ -114,8 +114,7 @@ class PermissionQuery
         foreach ($currentLevel as $levels) {
             if (is_array($levels)) {
                 if (
-                    Helpers::hasWildcard($levels) &&
-                    Helpers::isDenied($levels['*']) ||
+                    $this->currentLevelPermissionIsDenied($levels) ||
                     $this->findDeniesOnLowerLevels($levels)
                 ) {
                     return true;
@@ -123,6 +122,15 @@ class PermissionQuery
             }
         }
         return false;
+    }
+
+    /**
+     * @param array $level
+     * @return bool
+     */
+    protected function currentLevelPermissionIsDenied(array $level)
+    {
+        return Helpers::hasWildcard($level) && Helpers::isDenied($level['*']);
     }
 
 }
