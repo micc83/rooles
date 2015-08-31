@@ -7,7 +7,7 @@ Laravel Rooles [![Build Status](https://travis-ci.org/micc83/rooles.svg?branch=m
 Well, good point! Lately even *Taylor Otwell* is working on a custom ACL system to be shipped with (I guess as a separated package) **Laravel 5.2** so what's the point on creating a new one?
 Well it's all about complexity. Most of the ACL systems out here such as [romanbican/roles](https://github.com/romanbican/roles), [kodeine/laravel-acl](https://github.com/kodeine/laravel-acl) or [Sentinel](https://cartalyst.com/manual/sentinel/) are packed with tons of amazing features... which most of the time I'm not using! :D
 
-That's why I thought to build a minimal **Laravel roles and permissions manager** that provides a very simple RBAC implementation on top of the **default Laravel Auth System**. 
+That's why I thought to build a minimal **Laravel roles and permissions manager** that provides a very simple RBAC implementation on top of the **default Laravel Auth System**.
 Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permissions directly on the Eloquent User Model and two Middlewares to easily protect routes and Controllers.
 
 However, as your application grown, you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace functionalities at need. You can see **Rooles** not only as a fully working RBAC but also as a *starting point to develop your own custom roles and permission manager*.
@@ -25,7 +25,7 @@ Open `config/app.php` and add the following line at the end of the providers arr
 ```php
 Rooles\RoolesServiceProvider::class
 ```
-    
+
 Run the following command from your terminal to publish the migration file (it will simply add a `role` column to the default Users table), the config file and a default blade template for the *401-Unauthorized* view (It will not be published if one has already been created):
 
 ```sh
@@ -38,7 +38,7 @@ In order to be able to use route and Controllers middlewares (so to be able to f
 'perms' => \Rooles\PermsMiddleware::class,
 'role'  => \Rooles\RoleMiddleware::class,
 ```
-    
+
 As **Rooles** works on top of the default *Auth* system of Laravel and with the *Eloquent* User Model you must add the `Rooles\Traits\UserRole` trait to the User Class located in `App/User.php` as follow:
 
 ```php
@@ -62,7 +62,7 @@ protected $attributes = [
     'role' => 'admin'
 ];
 ```
-    
+
 Or run the provided migration to add the `role` column to the Users Table so to be able to change Users role at runtime:
 
 ```php
@@ -80,6 +80,7 @@ All the permissions for any given role are set in the `config/rooles.php` file a
     'roles' => [
         'default' => []
         'admin' => [
+            'name' => 'Administrator',
             'grant' => '*'
         ],
         'editor' => [
@@ -100,13 +101,30 @@ All the permissions for any given role are set in the `config/rooles.php` file a
 ];
 ```
 
+As you can see the format used is:
+
+```php
+[
+    'roles' => [
+        'role_id' => [
+            'name' => 'role_name',
+            'grant' => 'string_or_array_of_granted_permissions',
+            'deny' => 'string_or_array_of_denied_permissions',
+        ]
+    ]
+]
+
+
 The `default` role is applied to any user which has no role applied and provides no permissions unless differently stated in the config file.
+
+The `name` property is optional and allows to set a name differing from the provided Role ID.
 
 You can also create roles and handle permissions manually. Here's an example:
 
 ```php
 app()->make(\Rooles\Contracts\RoleRepository::class)
      ->getOrCreate('customer')
+     ->assignName('Client')
      ->grant(['cart.*', 'products.buy'])
      ->deny('cart.discount');
 ```
@@ -120,7 +138,7 @@ There are four main concept to remember when creating a permissions strategy for
 3. When you grant or deny a permission, if not already set, a *wildcard will be automatically appended* so `customers` is the same as `customers.*`. That also means that any child permission of the given one will be granted or denied, for example:
     ```php
         $role->grant('comments'); // Same as writing comments.*
-        
+
         $role->can('comments.write'); // true
         $role->can('comments.pingbacks.write') // true
     ```
@@ -128,7 +146,7 @@ There are four main concept to remember when creating a permissions strategy for
     ```php
         $role->grant('comments.write.*') // Same as writing comments.write
              ->deny('*.write');
-        
+
         $role->can('comments.write'); // true
         $role->can('users.write') // false
     ```
@@ -149,11 +167,11 @@ The same to check the logged in user permissions:
 
 ```php
 public function index(Illuminate\Contracts\Auth\Guard $auth) {
-    
+
     if ( $auth->user->can('users.list') ){
         // Do something...
     }
-    
+
 }
 ```
 
@@ -162,7 +180,7 @@ The API exposes a convenient method to negate a permissions assertion:
 ```php
 if ( $user->cannot('users.list') ) redirect()->to('dashboard');
 ```
-    
+
 You can evaluate multiple assertions passing an array through:
 
 ```php
@@ -175,24 +193,24 @@ There are also two convenient operator to use with the can/cannot assertions:
 if ( $user->can('users.list&users.read') ) // Do something when the user has both the permissions (& > AND)
 if ( $user->can('users.list|users.read') ) // Do something when the user has one of the requested permissions (| > OR)
 ```
-    
+
 Multiple operators can ben be joined together but mind that AND operators have always priority over OR operators.
 
 ### Checking for User role
 
-You can make a more general assertion checking for the user role (case insensitive):
+You can make a more general assertion checking for the user role ID (case insensitive):
 
 ```php
 if ( $user->role->is('admin') ) echo 'Hello Boss';
 ```
-    
-Or check if the user role is in a given range (still case insensitive):
+
+Or check if the user role ID is in a given range (still case insensitive):
 
 ```php
 if ( $user->role->isIn(['lamer', 'trool']) ) echo 'Hello Looser';
-``` 
+```
 
-You can also get the User role name using one of the following syntax:
+You can also get the User role name (the ID will be returned if no name is provided), using one of the following syntax:
 
 ```php
 // If in a string context:
@@ -201,11 +219,13 @@ echo $user->role;
 if ($user->role->name() === 'Admin') // Do something
 ```
 
-On the RoleManager each Role is assigned an ID which is nothing else than the name in lowercase (UTF8 support). If you need to make some comparison, like for example in a Select input field you better use the ID instead of the name. Example:
+If you need to make some comparisons, like for example in a Select input field you better use the ID instead of the name. Example:
 
 ```php
 {!! Form::select('role', ['editor' => 'Editor', 'admin' => 'Administrator'], $user->role->id()) !!}
 ```
+
+> Remember that role ID is automatically converted to lowercase with UTF8 support.
 
 ### Protect routes and Controllers through Middlewares
 
@@ -224,7 +244,7 @@ Route::get('admin/users/', [
     }
 ]);
 ```
-    
+
 In order to check for user permissions on a route you can use the **perms Middleware** as follow:
 
 ```php
@@ -298,7 +318,7 @@ So that you can intercept it in JavaScript as follow:
 if ('error' in response) console.log(response.error.message);
 ```
 
-For normal requests in case of missing authorizations a `Rooles\UnauthorizedHttpException` is thrown, which by default (when debug is disabled) will result in the previously published 401 error page with a `401` status code. The page itself can be customized editing the `resources/views/errors/401.blade.php` template. 
+For normal requests in case of missing authorizations a `Rooles\UnauthorizedHttpException` is thrown, which by default (when debug is disabled) will result in the previously published 401 error page with a `401` status code. The page itself can be customized editing the `resources/views/errors/401.blade.php` template.
 
 Otherwise if you'd rather not to show a view but instead implement some custom behaviour you can play with the render method in `app/Exceptions/Handler.php` as follow:
 
@@ -330,4 +350,4 @@ I firmly believe that even the best coded application in the world is bound to f
 
 ### Contributions
 
-I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns, algorythms etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add furthers when needed). 
+I'd be glad if you'd like to contribute to the project however I'd ask not to implement new features but to improve the few existing ones (improve patterns, algorythms etc). Each PR must follow [PSR-2](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md) coding standards and pass all the existing tests (or add furthers when needed).

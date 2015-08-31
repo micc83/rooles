@@ -20,6 +20,13 @@ class Role implements RoleContract
     protected $name;
 
     /**
+     * Role ID
+     *
+     * @var string
+     */
+    protected $id;
+
+    /**
      * @var PermissionsContract
      */
     protected $permissions;
@@ -27,12 +34,13 @@ class Role implements RoleContract
     /**
      * Constructor
      *
-     * @param string $name
+     * @param string              $id
      * @param PermissionsContract $permissions
      */
-    public function __construct($name, PermissionsContract $permissions)
+    public function __construct($id, PermissionsContract $permissions)
     {
-        $this->name = $name;
+        $this->name        = $id;
+        $this->id          = mb_strtolower($id);
         $this->permissions = $permissions;
     }
 
@@ -47,13 +55,27 @@ class Role implements RoleContract
     }
 
     /**
+     * @param string $name
+     *
+     * @return Role
+     */
+    public function assignName($name)
+    {
+        if ('' !== trim($name)) {
+            $this->name = $name;
+        }
+
+        return $this;
+    }
+
+    /**
      * Return role id
      *
      * @return string
      */
     public function id()
     {
-        return mb_strtolower($this->name());
+        return $this->id;
     }
 
     /**
@@ -105,7 +127,7 @@ class Role implements RoleContract
      */
     public function cannot($permissions)
     {
-        return !$this->can($permissions);
+        return ! $this->can($permissions);
     }
 
     /**

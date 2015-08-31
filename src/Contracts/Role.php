@@ -12,10 +12,10 @@ interface Role
     /**
      * Constructor
      *
-     * @param string $name
+     * @param string $id
      * @param Permissions $permissions
      */
-    public function __construct($name, Permissions $permissions);
+    public function __construct($id, Permissions $permissions);
 
     /**
      * Grants a single or multiple (array) permission
@@ -86,9 +86,16 @@ interface Role
     public function id();
 
     /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function assignName($name);
+
+    /**
      * If the object is called as a string will return the role name
      *
-     * @return string
+     * @return Role
      */
     public function __toString();
 

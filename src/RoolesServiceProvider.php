@@ -57,13 +57,16 @@ class RoolesServiceProvider extends ServiceProvider
     {
         $roles = config('rooles.roles');
 
-        foreach ($roles as $roleName => $permissions) {
-            $role = $roleRepo->getOrCreate($roleName);
-            if (array_key_exists('grant', $permissions)) {
-                $role->grant($permissions['grant']);
+        foreach ($roles as $roleId => $roleData) {
+            $role = $roleRepo->getOrCreate($roleId);
+            if (array_key_exists('name', $roleData)) {
+                $role->assignName($roleData['name']);
             }
-            if (array_key_exists('deny', $permissions)) {
-                $role->deny($permissions['deny']);
+            if (array_key_exists('grant', $roleData)) {
+                $role->grant($roleData['grant']);
+            }
+            if (array_key_exists('deny', $roleData)) {
+                $role->deny($roleData['deny']);
             }
         }
 
