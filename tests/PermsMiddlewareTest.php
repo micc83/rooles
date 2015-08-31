@@ -46,9 +46,9 @@ class PermsMiddlewareTest extends BaseCase
      */
     public function it_throw_exception_if_user_not_logged_in()
     {
-        $this->visitAndCatchException('restricted', 'Rooles\UnauthorizedHttpException')
+        $this->visitAndCatchException('restricted', 'Rooles\ForbiddenHttpException')
              ->dontSee('Done!')
-             ->seeStatusCode(401);
+             ->seeStatusCode(403);
     }
 
     /**
@@ -62,9 +62,9 @@ class PermsMiddlewareTest extends BaseCase
             'role' => 'operator'
         ]));
 
-        $this->visitAndCatchException('veryRestricted', 'Rooles\UnauthorizedHttpException')
+        $this->visitAndCatchException('veryRestricted', 'Rooles\ForbiddenHttpException')
              ->dontSee('Done!')
-             ->seeStatusCode(401);
+             ->seeStatusCode(403);
 
     }
 
@@ -95,8 +95,8 @@ class PermsMiddlewareTest extends BaseCase
     public function it_respond_with_json_encoded_unauthorized_error_on_ajax_calls()
     {
         $this->get('restricted', ['X-Requested-With' => 'XMLHttpRequest'])
-             ->see('"message":"Unauthorized"')
-             ->seeStatusCode(401);
+             ->see('"message":"Forbidden"')
+             ->seeStatusCode(403);
     }
 
 }

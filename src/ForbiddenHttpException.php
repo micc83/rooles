@@ -5,10 +5,10 @@ namespace Rooles;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * Class UnauthorizedHttpException
+ * Class ForbiddenHttpException
  * @package Rooles
  */
-class UnauthorizedHttpException extends HttpException
+class ForbiddenHttpException extends HttpException
 {
 
     /**
@@ -18,7 +18,7 @@ class UnauthorizedHttpException extends HttpException
      */
     public function __construct($message = null)
     {
-        parent::__construct(401, $message, null, [], 0);
+        parent::__construct(403, $message, null, [], 0);
     }
 
 }

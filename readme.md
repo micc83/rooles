@@ -26,7 +26,7 @@ Open `config/app.php` and add the following line at the end of the providers arr
 Rooles\RoolesServiceProvider::class
 ```
 
-Run the following command from your terminal to publish the migration file (it will simply add a `role` column to the default Users table), the config file and a default blade template for the *401-Unauthorized* view (It will not be published if one has already been created):
+Run the following command from your terminal to publish the migration file (it will simply add a `role` column to the default Users table), the config file and a default blade template for the *403-Forbidden* view (It will not be published if one has already been created):
 
 ```sh
 $ php artisan vendor:publish
@@ -303,13 +303,13 @@ Here we are saying that in order to access any controller method we must have a 
 
 #### Handling middlewares HTTP error responses
 
-**Rooles** middlewares handles error responses differently depending on the nature of the request. For Ajax requests they will respond with a JSON Object and a `401` status code as follow:
+**Rooles** middlewares handles error responses differently depending on the nature of the request. For Ajax requests they will respond with a JSON Object and a `403` status code as follow:
 
 ```json
 {
     "error" : {
-        "code" : 401,
-        "message" : "Unauthorized"
+        "code" : 403,
+        "message" : "Forbidden"
     }
 }
 ```
@@ -320,21 +320,21 @@ So that you can intercept it in JavaScript as follow:
 if ('error' in response) console.log(response.error.message);
 ```
 
-For normal requests in case of missing authorizations a `Rooles\UnauthorizedHttpException` is thrown, which by default (when debug is disabled) will result in the previously published 401 error page with a `401` status code. The page itself can be customized editing the `resources/views/errors/401.blade.php` template.
+For normal requests in case of missing authorizations a `Rooles\ForbiddenHttpException` is thrown, which by default (when debug is disabled) will result in the previously published 403 error page with a `403` status code. The page itself can be customized editing the `resources/views/errors/403.blade.php` template.
 
 Otherwise if you'd rather not to show a view but instead implement some custom behaviour you can play with the render method in `app/Exceptions/Handler.php` as follow:
 
 ```php
 public function render($request, Exception $e)
 {
-    if ($e instanceof \Rooles\UnauthorizedHttpException) {
+    if ($e instanceof \Rooles\ForbiddenHttpException) {
         return redirect('/')->withErrors(['You don\'t have the needed permissions to perform this action!']);
     }
     return parent::render($request, $e);
 }
 ```
 
-This way when an Unauthorized error is thrown you'll be redirected to the given page with an error flash message. To show the message you can add the following to your blade template:
+This way when an Forbiddeng error is thrown you'll be redirected to the given page with an error flash message. To show the message you can add the following to your blade template:
 
 ```php
 @if ($errors->has())

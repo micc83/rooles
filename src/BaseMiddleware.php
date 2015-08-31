@@ -41,7 +41,7 @@ abstract class BaseMiddleware
      * @param string $param
      *
      * @return mixed
-     * @throws UnauthorizedHttpException
+     * @throws ForbiddenHttpException
      */
     public function handle($request, Closure $next, $param = '')
     {
@@ -53,12 +53,12 @@ abstract class BaseMiddleware
             if ($request->ajax()) {
                 return response()->json([
                     'error' => [
-                        'code'    => 401,
-                        'message' => 'Unauthorized'
+                        'code'    => 403,
+                        'message' => 'Forbidden'
                     ]
-                ], 401);
+                ], 403);
             } else {
-                throw new UnauthorizedHttpException('Unauthorized.');
+                throw new ForbiddenHttpException('Forbidden');
             }
         }
 

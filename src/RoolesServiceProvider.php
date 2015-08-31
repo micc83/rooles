@@ -24,7 +24,7 @@ class RoolesServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->publishes([
-            __DIR__ . '/assets/views/401.blade.php' => base_path('resources/views/errors/401.blade.php'),
+            __DIR__ . '/assets/views/403.blade.php' => base_path('resources/views/errors/403.blade.php'),
         ], 'views');
 
         $this->publishes([
