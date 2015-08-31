@@ -115,7 +115,7 @@ As you can see the format used is:
         ]
     ]
 ]
-
+```
 
 The `default` role is applied to any user which has no role applied and provides no permissions unless differently stated in the config file.
 
