@@ -95,7 +95,7 @@ interface Role
     /**
      * If the object is called as a string will return the role name
      *
-     * @return Role
+     * @return string
      */
     public function __toString();
 
