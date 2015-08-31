@@ -89,7 +89,7 @@ class PermissionQuery
      * @param string $queryStep
      * @param string $path
      *
-     * @return array|string|bool
+     * @return array|bool
      */
     protected function followPath($queryStep, $path)
     {
