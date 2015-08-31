@@ -53,6 +53,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 }
 ```
 
+> **Important note on Laravel version >= 1.1.11** From this version on Laravel implements its own permission manager trough the `Authorizable` trait/contract so, in order to have the User model work with Rooles, you must remove any reference to both the `Authorizable` trait and interface from the Eloquent user model.
+
 ### Setting up users role
 
 Only a single Role can be assigned to each User. You can hardcode the role inside the User Eloquent model adding the role attribute as follow:
