@@ -38,8 +38,8 @@ class PermissionQuery
      */
     public function run()
     {
-        foreach ($this->query as $queryStep) {
 
+        foreach ($this->query as $queryStep) {
             if ($this->existsPathToVerify($queryStep)) {
 
                 $result = $this->followPath($queryStep, $this->findPath($queryStep));
@@ -50,10 +50,9 @@ class PermissionQuery
 
                 $this->permissions = $result;
 
-            } elseif (Helpers::isWildcard($queryStep)) {
+            } else {
                 break;
             }
-
         }
 
         return false;

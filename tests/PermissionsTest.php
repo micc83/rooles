@@ -266,13 +266,14 @@ class PermissionsTest extends BaseCase
     /**
      * @test
      */
-    public function it_should_pile_up_positive_permissions_with_higher_specifity() {
+    public function it_should_pile_up_positive_permissions_with_higher_specifity()
+    {
         $this->perms->set([
             'users',
             'users.customers.write'
         ], '*')->set([
             'users.customers.test.prova'
-        ],'!');
+        ], '!');
 
         $this->assertFalse($this->perms->evaluate('users'));
         $this->assertFalse($this->perms->evaluate('users.customers'));
@@ -282,7 +283,7 @@ class PermissionsTest extends BaseCase
         $this->perms->set([
             'users',
             'users.customers.write'
-        ], '*')->set('users.customers','!');
+        ], '*')->set('users.customers', '!');
 
         $this->assertTrue($this->perms->evaluate('users.write'));
         $this->assertTrue($this->perms->evaluate('users.customers.write'));
@@ -303,7 +304,7 @@ class PermissionsTest extends BaseCase
 
         $this->assertEquals([
             'users' => [
-                '*' => '*',
+                '*'     => '*',
                 'write' => [
                     '*' => '*'
                 ]
@@ -312,14 +313,31 @@ class PermissionsTest extends BaseCase
     }
 
     /**
-     * @param $object
+     * @test
+     */
+    public function it_doensnt_allow_to_skip_a_level_of_permission()
+    {
+
+        $this->perms->set([
+            'company.read'
+        ], '*');
+
+        $this->assertFalse($this->perms->evaluate('company.disabled.read'));
+
+    }
+
+    /**
+     * @param        $object
      * @param string $propery
+     *
      * @return mixed
      */
-    protected function getProtectedProperty($object, $propery){
+    protected function getProtectedProperty($object, $propery)
+    {
         $reflection = new ReflectionClass($object);
-        $property = $reflection->getProperty($propery);
+        $property   = $reflection->getProperty($propery);
         $property->setAccessible(true);
+
         return $property->getValue($object);
     }
 
