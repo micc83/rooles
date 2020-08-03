@@ -1,6 +1,6 @@
 Laravel Rooles [![Build Status](https://travis-ci.org/micc83/rooles.svg?branch=master)](https://travis-ci.org/micc83/rooles) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/micc83/rooles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/micc83/rooles/?branch=master)
 -------------
-#### Simple roles and permissions manager for Laravel 7.0
+#### Simple roles and permissions manager for Laravel ^7.0
 
 ### Why another Laravel RBAC (Role based access control) ?!?
 
