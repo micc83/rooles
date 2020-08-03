@@ -5,6 +5,7 @@ namespace Rooles;
 use App\User;
 use Closure;
 use Illuminate\Contracts\Auth\Guard;
+use Illuminate\Http\Request;
 
 /**
  * Class BaseMiddleware
@@ -36,8 +37,8 @@ abstract class BaseMiddleware
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure $next
+     * @param  Request $request
+     * @param Closure $next
      * @param string $param
      *
      * @return mixed

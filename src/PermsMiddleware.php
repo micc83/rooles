@@ -3,6 +3,7 @@
 namespace Rooles;
 
 use App\User;
+use Rooles\Traits\UserRole;
 
 /**
  * Class PermsMiddleware
@@ -13,7 +14,7 @@ class PermsMiddleware extends BaseMiddleware
 
     /**
      * @param string $permissions
-     * @param User $user
+     * @param User|UserRole $user
      * @return bool
      */
     protected function verifyCondition($permissions, $user)

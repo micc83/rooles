@@ -9,7 +9,6 @@ use Rooles\RoleManager;
  */
 class RoolesServiceProviderTest extends BaseCase
 {
-
     /**
      * @test
      */
@@ -23,7 +22,7 @@ class RoolesServiceProviderTest extends BaseCase
      */
     public function roleManager()
     {
-        return App::make(Rooles\Contracts\RoleRepository::class);
+        return app(Rooles\Contracts\RoleRepository::class);
     }
 
     /**
@@ -31,7 +30,7 @@ class RoolesServiceProviderTest extends BaseCase
      */
     public function it_register_roles_specified_in_config_file()
     {
-        Config::set('rooles.roles', [
+        config()->set('rooles.roles', [
             'admin' => [
                 'name'  => 'Administrator',
                 'grant' => [
@@ -49,5 +48,4 @@ class RoolesServiceProviderTest extends BaseCase
         $this->assertFalse($admin->can('admins.delete'));
         $this->assertEquals('Administrator', $admin);
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /**
  * Class PermsMiddlewareTest
  */
@@ -9,19 +11,18 @@ class PermsMiddlewareTest extends BaseCase
     /**
      * Setup tests
      */
-    public function setUp()
+    public function setUp(): void
     {
-
         parent::setUp();
 
-        get('restricted', [
+        Route::get('restricted', [
             'middleware' => 'perms:users.read|users.write',
             function () {
                 return 'Done!';
             }
         ]);
 
-        get('veryRestricted', [
+        Route::get('veryRestricted', [
             'middleware' => 'perms:users.read&users.write',
             function () {
                 return 'Done!';
@@ -47,8 +48,8 @@ class PermsMiddlewareTest extends BaseCase
     public function it_throw_exception_if_user_not_logged_in()
     {
         $this->visitAndCatchException('restricted', 'Rooles\ForbiddenHttpException')
-             ->dontSee('Done!')
-             ->seeStatusCode(403);
+             ->assertDontSee('Done!')
+             ->assertStatus(403);
     }
 
     /**
@@ -63,8 +64,8 @@ class PermsMiddlewareTest extends BaseCase
         ]));
 
         $this->visitAndCatchException('veryRestricted', 'Rooles\ForbiddenHttpException')
-             ->dontSee('Done!')
-             ->seeStatusCode(403);
+             ->assertDontSee('Done!')
+             ->assertStatus(403);
 
     }
 
@@ -79,14 +80,14 @@ class PermsMiddlewareTest extends BaseCase
             'role' => 'operator'
         ]));
 
-        $this->get('restricted')->see('Done!');
+        $this->get('restricted')->assertSee('Done!');
 
         $this->be(new UserMock([
             'name' => 'Master',
             'role' => 'admin'
         ]));
 
-        $this->get('veryRestricted')->see('Done!');
+        $this->get('veryRestricted')->assertSee('Done!');
     }
 
     /**
@@ -95,8 +96,8 @@ class PermsMiddlewareTest extends BaseCase
     public function it_respond_with_json_encoded_unauthorized_error_on_ajax_calls()
     {
         $this->get('restricted', ['X-Requested-With' => 'XMLHttpRequest'])
-             ->see('"message":"Forbidden"')
-             ->seeStatusCode(403);
+             ->assertJsonFragment(['message' => 'Forbidden'])
+             ->assertStatus(403);
     }
 
 }

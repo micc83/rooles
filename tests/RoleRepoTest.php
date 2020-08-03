@@ -20,7 +20,7 @@ class RoleRepoTest extends BaseCase
     /**
      * Setup
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->roleRepo = new RoleManager();
@@ -57,31 +57,34 @@ class RoleRepoTest extends BaseCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Role not found
      */
     public function it_throws_exception_if_role_doesnt_exists()
     {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Role not found');
+
         $this->roleRepo->get('detractor');
     }
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Duplicated role!
      */
     public function it_throws_exception_if_role_with_same_name_already_exists()
     {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Duplicated role!');
+
         $this->roleRepo->create('test')->grant('*');
         $this->roleRepo->add(new Role('test', new Permissions));
     }
 
     /**
      * @test
-     * @expectedException UnexpectedValueException
-     * @expectedExceptionMessage Duplicated role!
      */
     public function role_keys_are_case_insensitive () {
+        $this->expectException(UnexpectedValueException::class);
+        $this->expectExceptionMessage('Duplicated role!');
+
         $this->roleRepo->create('Test');
         $this->roleRepo->get('test')->grant('*');
         $this->roleRepo->add(new Role('test', new Permissions));

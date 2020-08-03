@@ -5,6 +5,7 @@ namespace Rooles;
 use InvalidArgumentException;
 use Rooles\Contracts\Role as RoleContract;
 use Rooles\Contracts\RoleRepository;
+use Throwable;
 use UnexpectedValueException;
 
 /**
@@ -32,7 +33,7 @@ class RoleManager implements RoleRepository
     {
         try {
             return $this->get($roleName);
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             return $this->create($roleName);
         }
     }
@@ -83,7 +84,7 @@ class RoleManager implements RoleRepository
      *
      * @param RoleContract $role
      *
-     * @return Role
+     * @return RoleContract
      */
     public function add(RoleContract $role)
     {

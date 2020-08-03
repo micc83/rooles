@@ -2,28 +2,27 @@
 
 namespace Rooles\Traits;
 
-use Illuminate\Support\Facades\App;
+use Rooles\Contracts\Role;
 use Rooles\Contracts\RoleRepository;
 
 /**
  * Class UserRole
  * @package Rooles\Traits
  *
- * @property \Rooles\Contracts\Role|string $role
+ * @property Role|string $role
  */
 trait UserRole
 {
-
     /**
      * Called on boot of the model
      *
      * @param string $role
      *
-     * @return \Rooles\Contracts\Role
+     * @return Role
      */
     public function getRoleAttribute($role)
     {
-        return App::make(RoleRepository::class)->get($role);
+        return app(RoleRepository::class)->get($role);
     }
 
     /**
@@ -45,5 +44,4 @@ trait UserRole
     {
         return $this->role->cannot($permissions);
     }
-
 }
