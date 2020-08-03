@@ -1,13 +1,12 @@
 Laravel Rooles [![Build Status](https://travis-ci.org/micc83/rooles.svg?branch=master)](https://travis-ci.org/micc83/rooles) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/micc83/rooles/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/micc83/rooles/?branch=master)
 -------------
-#### Simple roles and permissions manager for Laravel 5.1
+#### Simple roles and permissions manager for Laravel 7.0
 
 ### Why another Laravel RBAC (Role based access control) ?!?
 
-Well, good point! Lately even *Taylor Otwell* is working on a custom ACL system to be shipped with (I guess as a separated package) **Laravel 5.2** so what's the point on creating a new one?
-Well it's all about complexity. Most of the ACL systems out here such as [romanbican/roles](https://github.com/romanbican/roles), [kodeine/laravel-acl](https://github.com/kodeine/laravel-acl) or [Sentinel](https://cartalyst.com/manual/sentinel/) are packed with tons of amazing features... which most of the time I'm not using! :D
+Well, good point! Most of the ACL systems out here such as [romanbican/roles](https://github.com/romanbican/roles), [kodeine/laravel-acl](https://github.com/kodeine/laravel-acl) or [Sentinel](https://cartalyst.com/manual/sentinel/) are packed with tons of amazing features... which most of the time I'm not using! :D
 
-That's why I thought to build a minimal **Laravel roles and permissions manager** that provides a very simple RBAC implementation on top of the **default Laravel Auth System**.
+That's why I thought to build a minimal **Laravel roles and permissions manager** that provides a very simple RBAC implementation.
 Each user can be assigned a single Role, while permissions for each Role are stored in a single config file. With the package are provided a very intuitive and well documented API, a Trait to check permissions directly on the Eloquent User Model and two Middlewares to easily protect routes and Controllers.
 
 However, as your application grown, you might need a more complex ACL system, that's why the package comes with a couple of Contracts that you can leverage to improve or replace functionalities at need. You can see **Rooles** not only as a fully working RBAC but also as a *starting point to develop your own custom roles and permission manager*.

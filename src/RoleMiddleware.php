@@ -3,6 +3,7 @@
 namespace Rooles;
 
 use App\User;
+use Rooles\Traits\UserRole;
 
 /**
  * Class RoleMiddleware
@@ -10,10 +11,9 @@ use App\User;
  */
 class RoleMiddleware extends BaseMiddleware
 {
-
     /**
      * @param string $roles
-     * @param User $user
+     * @param User|UserRole $user
      *
      * @return bool
      */

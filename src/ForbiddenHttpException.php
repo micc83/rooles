@@ -14,9 +14,9 @@ class ForbiddenHttpException extends HttpException
     /**
      * Constructor.
      *
-     * @param string $message The internal exception message
+     * @param string|null $message The internal exception message
      */
-    public function __construct($message = null)
+    public function __construct(string $message = null)
     {
         parent::__construct(403, $message, null, [], 0);
     }

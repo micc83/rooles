@@ -18,7 +18,7 @@ class PermissionsTest extends BaseCase
     /**
      * SetUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->perms = new Permissions();
     }
@@ -317,13 +317,11 @@ class PermissionsTest extends BaseCase
      */
     public function it_doensnt_allow_to_skip_a_level_of_permission()
     {
-
         $this->perms->set([
             'company.read'
         ], '*');
 
         $this->assertFalse($this->perms->evaluate('company.disabled.read'));
-
     }
 
     /**
@@ -335,7 +333,7 @@ class PermissionsTest extends BaseCase
     protected function getProtectedProperty($object, $propery)
     {
         $reflection = new ReflectionClass($object);
-        $property   = $reflection->getProperty($propery);
+        $property = $reflection->getProperty($propery);
         $property->setAccessible(true);
 
         return $property->getValue($object);
