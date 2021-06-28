@@ -1,6 +1,6 @@
 {
     "name": "micc83/rooles",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "A very simple roles and permissions manager for Laravel 5",
     "keywords": [
         "laravel",
