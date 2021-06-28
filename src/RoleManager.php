@@ -14,22 +14,13 @@ use UnexpectedValueException;
  */
 class RoleManager implements RoleRepository
 {
-
     /**
      * Roles storage array
-     *
-     * @var array
      */
-    protected $roles = [];
+    protected array $roles = [];
 
-    /**
-     * Get an existing role or create a new one with the given name
-     *
-     * @param string $roleName
-     *
-     * @return RoleContract
-     */
-    public function getOrCreate($roleName)
+    /** @inheritDoc */
+    public function getOrCreate(string $roleName): Role
     {
         try {
             return $this->get($roleName);
@@ -38,19 +29,9 @@ class RoleManager implements RoleRepository
         }
     }
 
-    /**
-     * Get the role with the given name
-     *
-     * Return a "default" role if the given name is empty or
-     * throw InvalidArgumentException if role name is not found
-     *
-     * @param string $roleName
-     *
-     * @return RoleContract
-     */
-    public function get($roleName)
+    /** @inheritDoc */
+    public function get(string $roleName): Role
     {
-
         $roleName = mb_strtolower($roleName);
 
         if (empty($roleName)) {
@@ -62,38 +43,25 @@ class RoleManager implements RoleRepository
         }
 
         throw new InvalidArgumentException('Role not found');
-
     }
 
-    /**
-     * Create a new role
-     *
-     * @param string $roleName
-     *
-     * @return RoleContract
-     */
-    public function create($roleName)
+    /** @inheritDoc */
+    public function create(string $roleName): Role
     {
-        $role = new Role($roleName, new Permissions());
-
-        return $this->add($role);
+        return $this->add(
+            new Role($roleName, new Permissions())
+        );
     }
 
-    /**
-     * Add an existing role object to the repository
-     *
-     * @param RoleContract $role
-     *
-     * @return RoleContract
-     */
-    public function add(RoleContract $role)
+    /** @inheritDoc */
+    public function add(RoleContract $role): Role
     {
         if (isset($this->roles[$role->id()])) {
             throw new UnexpectedValueException('Duplicated role!');
         }
+
         $this->roles[$role->id()] = $role;
 
         return $role;
     }
-
 }

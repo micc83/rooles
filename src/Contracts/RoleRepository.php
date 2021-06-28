@@ -2,50 +2,34 @@
 
 namespace Rooles\Contracts;
 
+use InvalidArgumentException;
+
 /**
  * Interface RoleRepository
  * @package Rooles\Contracts
  */
 interface RoleRepository
 {
-
     /**
      * Get an existing role or create a new one with the given name
-     *
-     * @param string $roleName
-     *
-     * @return Role
      */
-    public function getOrCreate($roleName);
+    public function getOrCreate(string $roleName): Role;
 
     /**
-     * Get the role with the given name
+     * Get the role with the given name and return a "default" role i
+     * if the given name is empty.
      *
-     * Return a "default" role if the given name is empty or
-     * throw InvalidArgumentException if role name is not found
-     *
-     * @param string $roleName
-     *
-     * @return Role
+     * @throws InvalidArgumentException
      */
-    public function get($roleName);
+    public function get(string $roleName): Role;
 
     /**
      * Create a new role
-     *
-     * @param string $roleName
-     *
-     * @return Role
      */
-    public function create($roleName);
+    public function create(string $roleName): Role;
 
     /**
      * Add an existing role object to the repository
-     *
-     * @param Role $role
-     *
-     * @return Role
      */
-    public function add(Role $role);
-
+    public function add(Role $role): Role;
 }

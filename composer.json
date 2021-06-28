@@ -1,6 +1,6 @@
 {
     "name": "micc83/rooles",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "A very simple roles and permissions manager for Laravel 5",
     "keywords": [
         "laravel",
@@ -32,11 +32,11 @@
         ]
     },
     "require": {
-        "php": "^7.2.5"
+        "php": "^7.4|^8.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
-        "laravel/laravel": "^7.0"
+        "laravel/laravel": "^7.0|^8.0"
     },
     "minimum-stability": "dev",
     "prefer-stable": true
