@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add support for Laravel 8 and PHP 8
+
+### Changed
+- Change min PHP version to 7.4
+
 ## [2.0.0] - 2020-08-03
 
 ### Changed
