@@ -10,7 +10,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  */
 class ForbiddenHttpException extends HttpException
 {
-
     /**
      * Constructor.
      *
@@ -18,7 +17,7 @@ class ForbiddenHttpException extends HttpException
      */
     public function __construct(string $message = null)
     {
-        parent::__construct(403, $message, null, [], 0);
+        parent::__construct(403, (string) $message, null, [], 0);
     }
 
 }

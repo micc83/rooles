@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Add support for Laravel 9
+
 ## [3.0.0] - 2021-07-28
 
 ### Added
